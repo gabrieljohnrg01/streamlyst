@@ -20,10 +20,10 @@
     <div class="navbar-left">
       <img src="logo.png" alt="Streamlyst" class="logo" />
       <div class="nav-links">
-        <a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
-        <a href="#"><i class="fas fa-film"></i> Movies</a>
-        <a href="#"><i class="fas fa-tv"></i> TV Shows</a>
-        <a href="#"><i class="fas fa-dragon"></i> Anime</a>
+        <a href="#" class="nav-link active" data-section="home"><i class="fas fa-home"></i> Home</a>
+        <a href="#" class="nav-link" data-section="movies"><i class="fas fa-film"></i> Movies</a>
+        <a href="#" class="nav-link" data-section="tv"><i class="fas fa-tv"></i> TV Shows</a>
+        <a href="#" class="nav-link" data-section="anime"><i class="fas fa-dragon"></i> Anime</a>
       </div>
     </div>
     <div class="navbar-right">
@@ -51,20 +51,7 @@
   </div>
 
   <div class="content-container">
-    <div class="content-row">
-      <h2 class="row-title"><span>Trending Movies</span></h2>
-      <div class="content-list" id="movies-list"></div>
-    </div>
-
-    <div class="content-row">
-      <h2 class="row-title"><span>Trending TV Shows</span></h2>
-      <div class="content-list" id="tvshows-list"></div>
-    </div>
-
-    <div class="content-row">
-      <h2 class="row-title"><span>Popular Anime</span></h2>
-      <div class="content-list" id="anime-list"></div>
-    </div>
+    <!-- Content will be dynamically loaded here -->
   </div>
 
   <div class="modal" id="modal">
@@ -97,6 +84,14 @@
             </select>
           </div>
         </div>
+      </div>
+      <div class="seasons-container" id="seasons-container">
+        <h3>Seasons</h3>
+        <div class="seasons-list" id="seasons-list"></div>
+      </div>
+      <div class="episodes-container" id="episodes-container">
+        <h3>Episodes</h3>
+        <div class="episodes-list" id="episodes-list"></div>
       </div>
       <div class="modal-video-container">
         <iframe id="modal-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
