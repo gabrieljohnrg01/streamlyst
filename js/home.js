@@ -4,6 +4,13 @@ const IMG_URL = 'https://image.tmdb.org/t/p/original';
 let currentItem;
 let currentSection = 'home';
 
+// Add more genres
+const genres = {
+  movie: ['Action', 'Comedy', 'Drama', 'Horror', 'Romance', 'Sci-Fi', 'Fantasy', 'Thriller', 'Documentary'],
+  tv: ['Action', 'Comedy', 'Drama', 'Horror', 'Romance', 'Sci-Fi', 'Fantasy', 'Thriller', 'Documentary'],
+  anime: ['Action', 'Adventure', 'Fantasy', 'Romance', 'Horror', 'Slice of Life', 'Drama', 'Comedy']
+};
+
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
   init();
@@ -226,7 +233,20 @@ function displayList(items, containerId) {
     img.alt = item.title || item.name;
     img.loading = 'lazy';
     
+    // Add genres display
+    const genreContainer = document.createElement('div');
+    genreContainer.className = 'genre-container';
+    item.genre_ids.forEach(genreId => {
+      const genre = genres.movie[genreId] || genres.tv[genreId] || genres.anime[genreId];
+      if (genre) {
+        const genreSpan = document.createElement('span');
+                genreSpan.textContent = genre;
+        genreContainer.appendChild(genreSpan);
+      }
+    });
+    
     card.appendChild(img);
+    card.appendChild(genreContainer);
     card.addEventListener('click', () => showDetails(item));
     container.appendChild(card);
   });
@@ -239,7 +259,7 @@ async function showDetails(item) {
     document.getElementById('modal-description').textContent = '';
     document.getElementById('seasons-container').style.display = 'none';
     document.getElementById('episodes-container').style.display = 'none';
-    document.getElementById('modal-video-container').style.display = 'none';
+    document.getElementById('modal-video-container').style.display = 'none'; // Hide video player initially
     
     // Fetch additional details
     const details = await fetchItemDetails(item);
