@@ -28,6 +28,12 @@ h1, h2, h3, h4 {
   font-weight: 700;
 }
 
+.loading {
+  padding: 50px;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
 /* Navbar */
 .navbar {
   display: flex;
@@ -254,6 +260,11 @@ h1, h2, h3, h4 {
   display: none;
 }
 
+.content-card {
+  position: relative;
+  transition: transform 0.3s;
+}
+
 .content-list img {
   width: 220px;
   border-radius: 4px;
@@ -262,10 +273,13 @@ h1, h2, h3, h4 {
   flex-shrink: 0;
 }
 
-.content-list img:hover {
+.content-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   z-index: 2;
+}
+
+.content-card:hover img {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
 /* Modal */
@@ -430,6 +444,69 @@ h1, h2, h3, h4 {
   font-size: 14px;
 }
 
+/* Seasons and episodes */
+.seasons-container, .episodes-container {
+  margin: 20px 30px;
+  display: none;
+}
+
+.seasons-container h3, .episodes-container h3 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.seasons-list, .episodes-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.season-card, .episode-card {
+  min-width: 150px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+
+.season-card:hover, .episode-card:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.season-card.active {
+  background: var(--primary);
+}
+
+.season-poster {
+  width: 100%;
+  border-radius: 4px;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+}
+
+.episode-card {
+  min-width: 250px;
+}
+
+.episode-poster {
+  width: 100%;
+  border-radius: 4px;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.episode-info {
+  margin-top: 8px;
+}
+
+.episode-number {
+  font-weight: bold;
+  color: var(--primary);
+}
+
 .modal-video-container {
   width: 100%;
   height: 500px;
@@ -515,7 +592,11 @@ h1, h2, h3, h4 {
   opacity: 0.5;
 }
 
-.search-results img {
+.search-card {
+  transition: transform 0.3s;
+}
+
+.search-card img {
   width: 100%;
   border-radius: 4px;
   transition: transform 0.3s;
@@ -523,7 +604,7 @@ h1, h2, h3, h4 {
   object-fit: cover;
 }
 
-.search-results img:hover {
+.search-card:hover {
   transform: scale(1.05);
 }
 
@@ -639,6 +720,14 @@ h1, h2, h3, h4 {
   .modal-video-container {
     height: 400px;
   }
+  
+  .season-card {
+    min-width: 120px;
+  }
+  
+  .episode-card {
+    min-width: 200px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -648,10 +737,6 @@ h1, h2, h3, h4 {
   
   .navbar-left {
     gap: 20px;
-  }
-  
-  .nav-links {
-    display: none;
   }
   
   .hero-banner {
@@ -724,6 +809,14 @@ h1, h2, h3, h4 {
   .footer-bottom {
     flex-direction: column;
     gap: 15px;
+  }
+  
+  .season-card {
+    min-width: 100px;
+  }
+  
+  .episode-card {
+    min-width: 180px;
   }
 }
 
