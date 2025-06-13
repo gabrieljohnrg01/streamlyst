@@ -61,7 +61,7 @@ h1, h2, h3, h4 {
 
 .logo {
   height: 40px;
-  filter: brightness(0) invert(1);
+  width: auto; /* Maintain aspect ratio */
 }
 
 .nav-links {
