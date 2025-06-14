@@ -50,28 +50,47 @@ function displayList(items, containerId) {
 
 async function showDetails(item) {
   currentItem = item;
+  
+  // Clean up any existing season/episode selectors first
+  const existingContainer = document.getElementById('seasons-container');
+  if (existingContainer) {
+    existingContainer.remove();
+  }
+  
   document.getElementById('modal-title').textContent = item.title || item.name;
   document.getElementById('modal-description').textContent = item.overview;
   document.getElementById('modal-image').src = `${IMG_URL}${item.poster_path}`;
   document.getElementById('modal-rating').innerHTML = '★'.repeat(Math.round(item.vote_average / 2));
   
-  // Handle TV shows and anime differently
-  if (item.media_type === 'tv' || (!item.media_type && item.first_air_date)) {
-    await loadTVSeasons(item);
-  } else {
+  // Determine content type properly
+  const isMovie = item.media_type === 'movie' || (!item.media_type && item.release_date);
+  const isTVShow = item.media_type === 'tv' || (!item.media_type && item.first_air_date);
+  
+  if (isMovie) {
     // For movies, load player directly
-    loadPlayer(1, 1);
+    loadPlayer();
+  } else if (isTVShow) {
+    // For TV shows and anime, load seasons/episodes
+    await loadTVSeasons(item);
   }
   
   document.getElementById('modal').style.display = 'flex';
 }
 
 async function loadTVSeasons(item) {
-  const tvDetails = await fetchTVDetails(item.id);
-  const seasonsContainer = document.getElementById('seasons-container');
-  
-  if (!seasonsContainer) {
-    // Create seasons container if it doesn't exist
+  try {
+    const tvDetails = await fetchTVDetails(item.id);
+    
+    // Filter out specials (season 0) and only show actual seasons
+    const regularSeasons = tvDetails.seasons.filter(season => season.season_number > 0);
+    
+    if (regularSeasons.length === 0) {
+      // If no regular seasons, just load the player
+      loadPlayer();
+      return;
+    }
+    
+    // Create seasons container
     const container = document.createElement('div');
     container.id = 'seasons-container';
     container.innerHTML = `
@@ -79,8 +98,8 @@ async function loadTVSeasons(item) {
         <div class="season-selector">
           <label>Season: </label>
           <select id="season-select" onchange="loadEpisodes()">
-            ${tvDetails.seasons.map(season => 
-              `<option value="${season.season_number}">${season.name}</option>`
+            ${regularSeasons.map(season => 
+              `<option value="${season.season_number}">Season ${season.season_number}</option>`
             ).join('')}
           </select>
         </div>
@@ -90,24 +109,21 @@ async function loadTVSeasons(item) {
             <option value="1">Episode 1</option>
           </select>
         </div>
-        ${item.original_language === 'ja' ? `
-        <div class="audio-selector">
-          <label>Audio: </label>
-          <select id="audio-select" onchange="loadPlayer()">
-            <option value="sub">Sub</option>
-            <option value="dub">Dub</option>
-          </select>
-        </div>` : ''}
       </div>
     `;
     
     // Insert before the video player
     const videoContainer = document.querySelector('.modal-video-container');
     videoContainer.parentNode.insertBefore(container, videoContainer);
+    
+    // Load episodes for first season
+    await loadEpisodes();
+    
+  } catch (error) {
+    console.error('Error loading TV details:', error);
+    // Fallback: just load the player
+    loadPlayer();
   }
-  
-  // Load episodes for first season
-  await loadEpisodes();
 }
 
 async function loadEpisodes() {
@@ -118,21 +134,34 @@ async function loadEpisodes() {
     const res = await fetch(`${BASE_URL}/tv/${currentItem.id}/season/${seasonNumber}?api_key=${API_KEY}`);
     const seasonData = await res.json();
     
-    episodeSelect.innerHTML = '';
-    seasonData.episodes.forEach(episode => {
-      const option = document.createElement('option');
-      option.value = episode.episode_number;
-      option.textContent = `Episode ${episode.episode_number}: ${episode.name}`;
-      episodeSelect.appendChild(option);
-    });
+    if (seasonData.episodes && seasonData.episodes.length > 0) {
+      episodeSelect.innerHTML = '';
+      seasonData.episodes.forEach(episode => {
+        const option = document.createElement('option');
+        option.value = episode.episode_number;
+        option.textContent = `Episode ${episode.episode_number}${episode.name ? ': ' + episode.name : ''}`;
+        episodeSelect.appendChild(option);
+      });
+    } else {
+      // Fallback: create default episodes based on episode count
+      episodeSelect.innerHTML = '';
+      const episodeCount = Math.min(24, Math.max(1, seasonData.episode_count || 12));
+      for (let i = 1; i <= episodeCount; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `Episode ${i}`;
+        episodeSelect.appendChild(option);
+      }
+    }
     
     // Load first episode by default
     loadPlayer();
+    
   } catch (error) {
     console.error('Error loading episodes:', error);
     // Fallback: create default episodes
     episodeSelect.innerHTML = '';
-    for (let i = 1; i <= 24; i++) {
+    for (let i = 1; i <= 12; i++) {
       const option = document.createElement('option');
       option.value = i;
       option.textContent = `Episode ${i}`;
@@ -143,6 +172,7 @@ async function loadEpisodes() {
 }
 
 function loadPlayer() {
+  // Determine if it's a movie or TV show
   const isMovie = currentItem.media_type === 'movie' || (!currentItem.media_type && currentItem.release_date);
   
   if (isMovie) {
@@ -153,16 +183,14 @@ function loadPlayer() {
     // TV Show or Anime player
     const seasonSelect = document.getElementById('season-select');
     const episodeSelect = document.getElementById('episode-select');
-    const audioSelect = document.getElementById('audio-select');
     
     const season = seasonSelect ? seasonSelect.value : 1;
     const episode = episodeSelect ? episodeSelect.value : 1;
     
-    // Check if it's anime (Japanese language)
-    if (currentItem.original_language === 'ja' && audioSelect) {
-      const audioType = audioSelect.value;
-      // Use anime endpoint for Japanese content
-      const embedURL = `https://vidsrc.cc/v2/embed/anime/tmdb${currentItem.id}/${episode}/${audioType}?autoPlay=false`;
+    // Check if it's anime (Japanese language) - use sub only
+    if (currentItem.original_language === 'ja' && currentItem.genre_ids && currentItem.genre_ids.includes(16)) {
+      // Use anime endpoint for Japanese anime content with sub only
+      const embedURL = `https://vidsrc.cc/v2/embed/anime/tmdb${currentItem.id}/${episode}/sub?autoPlay=false`;
       document.getElementById('modal-video').src = embedURL;
     } else {
       // Regular TV show endpoint
