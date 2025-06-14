@@ -177,7 +177,7 @@ function loadPlayer() {
   
   if (isMovie) {
     // Movie player
-    const embedURL = `https://vidsrc.cc/v3/embed/movie/${currentItem.id}?autoPlay=false&poster=false`;
+    const embedURL = `https://vidsrc.cc/v2/embed/movie/${currentItem.id}?autoPlay=false&poster=false`;
     document.getElementById('modal-video').src = embedURL;
   } else {
     // TV Show or Anime player
@@ -194,7 +194,7 @@ function loadPlayer() {
       document.getElementById('modal-video').src = embedURL;
     } else {
       // Regular TV show endpoint
-      const embedURL = `https://vidsrc.cc/v3/embed/tv/${currentItem.id}/${season}/${episode}?autoPlay=false&poster=false`;
+      const embedURL = `https://vidsrc.cc/v2/embed/tv/${currentItem.id}/${season}/${episode}?autoPlay=false&poster=false`;
       document.getElementById('modal-video').src = embedURL;
     }
   }
