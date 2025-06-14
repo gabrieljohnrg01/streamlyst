@@ -1,81 +1,84 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Streamlyst | Your Ultimate Streaming Destination</title>
+  <title>My Website</title>
   <link rel="stylesheet" href="css/home.css">
+  <link rel="preload" href="css/home.css" as="style">
+  <link rel="preload" href="js/home.js" as="script">
+  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+  <script defer src="js/home.js"></script>
 </head>
 
 <body>
   <div class="navbar">
-    <div class="navbar-left">
-      <img src="images/logo.png" alt="Streamlyst" class="logo" />
-      <div class="nav-links">
-        <a href="#" class="nav-link active" data-section="home"><i class="fas fa-home"></i> Home</a>
-        <a href="#" class="nav-link" data-section="movies"><i class="fas fa-film"></i> Movies</a>
-        <a href="#" class="nav-link" data-section="tv"><i class="fas fa-tv"></i> TV Shows</a>
-        <a href="#" class="nav-link" data-section="anime"><i class="fas fa-dragon"></i> Anime</a>
-      </div>
-    </div>
-    <div class="navbar-right">
-      <button class="search-btn" onclick="openSearchModal()"><i class="fas fa-search"></i></button>
+    <img src="logo.png" alt="LOGO HERE" />
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <input type="text" class="search-bar" placeholder="Search..." onfocus="openSearchModal()" />
     </div>
   </div>
 
-  <div class="hero-banner" id="banner">
-    <div class="banner-content">
-      <h1 id="banner-title"></h1>
-      <div class="banner-actions">
-        <button class="play-btn"><i class="fas fa-play"></i> Play Now</button>
-        <button class="info-btn"><i class="fas fa-info-circle"></i> More Info</button>
-      </div>
-    </div>
+  <div class="banner" id="banner">
+    <h1 id="banner-title"></h1>
   </div>
 
-  <div class="content-container">
-    <!-- Content will be dynamically loaded here -->
+  <div class="row">
+    <h2>Trending Movies</h2>
+    <div class="list" id="movies-list"></div>
+  </div>
+
+  <div class="row">
+    <h2>Trending TV Shows</h2>
+    <div class="list" id="tvshows-list"></div>
+  </div>
+
+  <div class="row">
+    <h2>Trending Anime</h2>
+    <div class="list" id="anime-list"></div>
   </div>
 
   <div class="modal" id="modal">
     <div class="modal-content">
-      <span class="close" onclick="closeModal()"><i class="fas fa-times"></i></span>
+      <span class="close" onclick="closeModal()" style="color: red;">&times;</span>
       <div class="modal-body">
-        <div class="modal-poster">
-          <img id="modal-image" src="" alt="" />
-          <div class="modal-buttons">
-            <button class="modal-play-btn"><i class="fas fa-play"></i> Play</button>
-            <button class="modal-add-btn"><i class="fas fa-plus"></i> My List</button>
-          </div>
-        </div>
-        <div class="modal-text">
-          <h2 id="modal-title"></h2>
-          <p id="modal-description"></p>
-          <div class="modal-genres" id="modal-genres"></div>
-        </div>
+  <img id="modal-image" src="" alt="" />
+  <div class="modal-text">
+    <h2 id="modal-title"></h2>
+    <div class="stars" id="modal-rating"></div>
+    <p id="modal-description"></p>
+  </div>
+</div>
+      
+      <div class="server-selector">
+        <label for="server">Change Server:</label>
+        <select id="server" onchange="changeServer()">
+          <option value="vidsrc.cc">Vidsrc.cc</option>
+          <option value="vidsrc.me">Vidsrc.me</option>
+          <option value="player.videasy.net">Player.Videasy.net</option>
+        </select>
       </div>
-      <div class="modal-video-container" id="modal-video-container">
-        <iframe id="modal-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
-      </div>
+      <iframe id="modal-video" width="100%" height="315" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
 
   <div class="search-modal" id="search-modal">
-    <div class="search-header">
-      <span class="close" onclick="closeSearchModal()"><i class="fas fa-times"></i></span>
-      <input type="text" id="search-input" placeholder="Search..." oninput="searchTMDB()" autocomplete="off" />
-    </div>
-    <div class="search-results" id="search-results"></div>
+    <span class="close" onclick="closeSearchModal()" style="color: red;">&times;</span>
+    <input type="text" id="search-input" placeholder="Search for a movie or show..." oninput="searchTMDB()" />
+    <div class="results" id="search-results"></div>
   </div>
 
-  <footer class="footer">
-    <p>&copy; 2025 Streamlyst. All rights reserved.</p>
-  </footer>
+<footer class="footer">
+  <div class="footer-content">
+    <p>&copy; 2025 My Website. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#">Disclaimer</a>
+      <a href="#">About Us</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </div>
+</footer>
 
-  <script src="js/home.js"></script>
+  
 </body>
-</html>
