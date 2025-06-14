@@ -460,7 +460,7 @@ function loadPlayer() {
    
   if (isMovie) { 
     // Movie player 
-    const embedURL = `https://vidsrc.cc/v2/embed/movie/tmdb${currentItem.id}?autoPlay=false&poster=false`; 
+    const embedURL = `https://vidsrc.cc/v2/embed/movie/${currentItem.id}?autoPlay=false&poster=false`; 
     document.getElementById('modal-video').src = embedURL; 
   } else if (isAnime) {
     // Anime player - use AniList ID with anime endpoint
@@ -479,7 +479,7 @@ function loadPlayer() {
     const episode = episodeSelect ? episodeSelect.value : 1; 
      
     // Regular TV show endpoint 
-    const embedURL = `https://vidsrc.cc/v2/embed/tv/tmdb${currentItem.id}/${season}/${episode}?autoPlay=false&poster=false`; 
+    const embedURL = `https://vidsrc.cc/v2/embed/tv/${currentItem.id}/${season}/${episode}?autoPlay=false&poster=false`; 
     document.getElementById('modal-video').src = embedURL; 
   } 
 } 
