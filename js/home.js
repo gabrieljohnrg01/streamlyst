@@ -3,14 +3,12 @@ const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_URL = 'https://image.tmdb.org/t/p/original'; 
 const ANILIST_URL = 'https://graphql.anilist.co';
 let currentItem; 
- 
+
 async function fetchTrending(type) { 
   const res = await fetch(`${BASE_URL}/trending/${type}/week?api_key=${API_KEY}`); 
   const data = await res.json(); 
   
-  // Filter out anime from TMDB results
   const filteredResults = data.results.filter(item => {
-    // Remove Japanese content with animation genre (anime)
     const isJapanese = item.original_language === 'ja';
     const isAnimation = item.genre_ids && item.genre_ids.includes(16);
     return !(isJapanese && isAnimation);
@@ -55,6 +53,9 @@ async function fetchTrendingAnime() {
               name
             }
           }
+          season
+          seasonYear
+          format
         }
       }
     }
@@ -71,7 +72,6 @@ async function fetchTrendingAnime() {
     
     const data = await response.json();
     
-    // Transform AniList data to match TMDB format for compatibility
     return data.data.Page.media.map(anime => ({
       id: anime.id,
       name: anime.title.english || anime.title.romaji,
@@ -82,11 +82,14 @@ async function fetchTrendingAnime() {
       vote_average: anime.averageScore ? anime.averageScore / 10 : 0,
       media_type: 'anime',
       original_language: 'ja',
-      genre_ids: [16], // Animation genre ID
+      genre_ids: [16],
       genres: anime.genres,
       episodes: anime.episodes,
       status: anime.status,
-      studios: anime.studios.nodes.map(studio => studio.name)
+      studios: anime.studios.nodes.map(studio => studio.name),
+      season: anime.season,
+      seasonYear: anime.seasonYear,
+      format: anime.format
     }));
   } catch (error) {
     console.error('Error fetching anime from AniList:', error);
@@ -120,6 +123,9 @@ async function searchAnime(query) {
               name
             }
           }
+          season
+          seasonYear
+          format
         }
       }
     }
@@ -153,7 +159,10 @@ async function searchAnime(query) {
       genres: anime.genres,
       episodes: anime.episodes,
       status: anime.status,
-      studios: anime.studios.nodes.map(studio => studio.name)
+      studios: anime.studios.nodes.map(studio => studio.name),
+      season: anime.season,
+      seasonYear: anime.seasonYear,
+      format: anime.format
     }));
   } catch (error) {
     console.error('Error searching anime on AniList:', error);
@@ -167,7 +176,7 @@ async function fetchTVDetails(id) {
   return data; 
 } 
 
-async function fetchAnimeWithRelations(id) {
+async function fetchAnimeDetails(id) {
   const query = `
     query ($id: Int) {
       Media(id: $id, type: ANIME) {
@@ -192,23 +201,30 @@ async function fetchAnimeWithRelations(id) {
             name
           }
         }
+        streamingEpisodes {
+          title
+          thumbnail
+          url
+        }
         relations {
           edges {
             relationType
             node {
               id
-              type
               title {
                 romaji
                 english
-                native
               }
               episodes
-              status
+              season
+              seasonYear
               format
             }
           }
         }
+        season
+        seasonYear
+        format
       }
     }
   `;
@@ -226,56 +242,11 @@ async function fetchAnimeWithRelations(id) {
     });
     
     const data = await response.json();
-    return data.data?.Media || null;
+    return data.data.Media;
   } catch (error) {
     console.error('Error fetching anime details from AniList:', error);
     return null;
   }
-}
-
-function organizeAnimeSeasons(mainAnime) {
-  if (!mainAnime || !mainAnime.relations) {
-    return [{
-      id: mainAnime?.id || 0,
-      title: mainAnime?.title?.english || mainAnime?.title?.romaji || 'Unknown',
-      episodes: mainAnime?.episodes || 12,
-      seasonNumber: 1
-    }];
-  }
-
-  const seasons = [];
-  const processedIds = new Set();
-
-  // Add main anime
-  seasons.push({
-    id: mainAnime.id,
-    title: mainAnime.title.english || mainAnime.title.romaji,
-    episodes: mainAnime.episodes || 12,
-    seasonNumber: 1,
-    relationType: 'MAIN'
-  });
-  processedIds.add(mainAnime.id);
-
-  // Find sequels
-  const sequels = mainAnime.relations.edges.filter(edge => 
-    edge.relationType === 'SEQUEL' && 
-    edge.node.type === 'ANIME' &&
-    edge.node.status !== 'NOT_YET_RELEASED' &&
-    !processedIds.has(edge.node.id)
-  );
-
-  sequels.forEach((sequel, index) => {
-    seasons.push({
-      id: sequel.node.id,
-      title: sequel.node.title.english || sequel.node.title.romaji,
-      episodes: sequel.node.episodes || 12,
-      seasonNumber: index + 2,
-      relationType: 'SEQUEL'
-    });
-    processedIds.add(sequel.node.id);
-  });
-
-  return seasons.sort((a, b) => a.seasonNumber - b.seasonNumber);
 }
  
 function displayBanner(item) { 
@@ -293,7 +264,6 @@ function displayList(items, containerId) {
   items.forEach(item => { 
     const img = document.createElement('img'); 
     
-    // Handle different image URL formats
     if (item.poster_path) {
       img.src = item.poster_path.startsWith('http') ? item.poster_path : `${IMG_URL}${item.poster_path}`;
     } else {
@@ -309,7 +279,6 @@ function displayList(items, containerId) {
 async function showDetails(item) { 
   currentItem = item; 
    
-  // Clean up any existing season/episode selectors first 
   const existingContainer = document.getElementById('seasons-container'); 
   if (existingContainer) { 
     existingContainer.remove(); 
@@ -318,7 +287,6 @@ async function showDetails(item) {
   document.getElementById('modal-title').textContent = item.title || item.name; 
   document.getElementById('modal-description').textContent = item.overview; 
   
-  // Handle different image URL formats
   const posterUrl = item.poster_path ? 
     (item.poster_path.startsWith('http') ? item.poster_path : `${IMG_URL}${item.poster_path}`) :
     'https://via.placeholder.com/300x450?text=No+Image';
@@ -326,123 +294,148 @@ async function showDetails(item) {
   
   document.getElementById('modal-rating').innerHTML = '★'.repeat(Math.round(item.vote_average / 2)); 
    
-  // Determine content type properly 
   const isMovie = item.media_type === 'movie' || (!item.media_type && item.release_date); 
   const isTVShow = item.media_type === 'tv' || (!item.media_type && item.first_air_date); 
   const isAnime = item.media_type === 'anime';
    
   if (isMovie) { 
-    // For movies, load player directly 
     loadPlayer(); 
   } else if (isAnime) {
-    // For anime, load episodes with seasons
-    await loadAnimeEpisodes(item);
+    await loadAnimeSeasons(item);
   } else if (isTVShow) { 
-    // For TV shows, load seasons/episodes 
     await loadTVSeasons(item); 
   } 
    
   document.getElementById('modal').style.display = 'flex'; 
 } 
 
-async function loadAnimeEpisodes(item) {
+async function loadAnimeSeasons(item) {
   try {
-    // Fetch anime with relations
-    const animeWithRelations = await fetchAnimeWithRelations(item.id);
+    const animeDetails = await fetchAnimeDetails(item.id);
     
-    if (!animeWithRelations) {
-      createDefaultAnimeEpisodes(item.episodes || 12);
-      loadPlayer();
-      return;
+    // Get all related seasons (SEQUEL relation type)
+    const seasons = animeDetails.relations?.edges
+      .filter(edge => edge.relationType === 'SEQUEL')
+      .map(edge => edge.node)
+      .filter(node => node.format === 'TV');
+    
+    // Add current season to the list if it's TV format
+    if (animeDetails.format === 'TV') {
+      seasons.unshift({
+        id: animeDetails.id,
+        title: animeDetails.title,
+        episodes: animeDetails.episodes,
+        season: animeDetails.season,
+        seasonYear: animeDetails.seasonYear
+      });
     }
-
-    // Organize seasons from relations
-    const allSeasons = organizeAnimeSeasons(animeWithRelations);
     
-    // Store seasons data for player
-    currentItem.animeSeasons = allSeasons;
-
-    // Create container
+    // Sort seasons by year and season
+    seasons.sort((a, b) => {
+      if (a.seasonYear !== b.seasonYear) return a.seasonYear - b.seasonYear;
+      const seasonOrder = { WINTER: 1, SPRING: 2, SUMMER: 3, FALL: 4 };
+      return seasonOrder[a.season] - seasonOrder[b.season];
+    });
+    
+    // Create seasons container
     const container = document.createElement('div');
     container.id = 'seasons-container';
     
-    let seasonSelector = '';
-    
-    // Only show season selector if there are multiple seasons
-    if (allSeasons.length > 1) {
-      seasonSelector = `
-        <div class="season-selector">
-          <label>Season: </label>
-          <select id="season-select" onchange="updateAnimeEpisodes()">
-            ${allSeasons.map(season => 
-              `<option value="${season.seasonNumber}" data-anime-id="${season.id}">
-                Season ${season.seasonNumber}
-              </option>`
-            ).join('')}
-          </select>
+    if (seasons.length > 1) {
+      // Multiple seasons available
+      let seasonOptions = seasons.map((season, index) => {
+        const seasonName = season.season && season.seasonYear ? 
+          `${season.season} ${season.seasonYear}` : `Season ${index + 1}`;
+        return `<option value="${season.id}">${seasonName}</option>`;
+      }).join('');
+      
+      container.innerHTML = `
+        <div class="seasons-episodes">
+          <div class="season-selector">
+            <label>Season: </label>
+            <select id="season-select" onchange="changeAnimeSeason()">
+              ${seasonOptions}
+            </select>
+          </div>
+          <div class="episode-selector">
+            <label>Episode: </label>
+            <select id="episode-select" onchange="loadPlayer()">
+              <option value="1">Episode 1</option>
+            </select>
+          </div>
         </div>
       `;
+      
+      // Store seasons data for later use
+      container.dataset.seasons = JSON.stringify(seasons);
+      
+      // Insert before the video player
+      const videoContainer = document.querySelector('.modal-video-container');
+      videoContainer.parentNode.insertBefore(container, videoContainer);
+      
+      // Load episodes for first season
+      await loadAnimeEpisodes(seasons[0]);
+    } else if (seasons.length === 1) {
+      // Single season
+      await loadAnimeEpisodes(seasons[0]);
+    } else {
+      // No seasons found, create default episodes
+      createDefaultAnimeEpisodes(item.episodes || 12);
+      loadPlayer();
     }
-    
-    // Episode selector for first season
-    const firstSeason = allSeasons[0];
-    const episodeCount = firstSeason.episodes || 12;
-    let episodeOptions = '';
-    
-    for (let i = 1; i <= episodeCount; i++) {
-      episodeOptions += `<option value="${i}">Episode ${i}</option>`;
-    }
-    
-    container.innerHTML = `
-      <div class="seasons-episodes">
-        ${seasonSelector}
-        <div class="episode-selector">
-          <label>Episode: </label>
-          <select id="episode-select" onchange="loadPlayer()">
-            ${episodeOptions}
-          </select>
-        </div>
-      </div>
-    `;
-    
-    // Insert before video player
-    const videoContainer = document.querySelector('.modal-video-container');
-    videoContainer.parentNode.insertBefore(container, videoContainer);
-    
-    // Load first episode
-    loadPlayer();
     
   } catch (error) {
-    console.error('Error loading anime episodes:', error);
+    console.error('Error loading anime seasons:', error);
     createDefaultAnimeEpisodes(item.episodes || 12);
     loadPlayer();
   }
 }
 
-function updateAnimeEpisodes() {
+async function changeAnimeSeason() {
   const seasonSelect = document.getElementById('season-select');
-  const episodeSelect = document.getElementById('episode-select');
+  const seasonsContainer = document.getElementById('seasons-container');
+  const seasons = JSON.parse(seasonsContainer.dataset.seasons);
   
-  if (!seasonSelect || !currentItem.animeSeasons) return;
+  const selectedSeasonId = parseInt(seasonSelect.value);
+  const selectedSeason = seasons.find(season => season.id === selectedSeasonId);
   
-  const selectedSeasonNumber = parseInt(seasonSelect.value);
-  const selectedSeason = currentItem.animeSeasons.find(s => s.seasonNumber === selectedSeasonNumber);
-  
-  if (!selectedSeason) return;
-  
-  // Update episodes for selected season
-  const episodeCount = selectedSeason.episodes || 12;
-  episodeSelect.innerHTML = '';
-  
-  for (let i = 1; i <= episodeCount; i++) {
-    const option = document.createElement('option');
-    option.value = i;
-    option.textContent = `Episode ${i}`;
-    episodeSelect.appendChild(option);
+  if (selectedSeason) {
+    await loadAnimeEpisodes(selectedSeason);
   }
-  
-  // Load first episode of new season
-  loadPlayer();
+}
+
+async function loadAnimeEpisodes(season) {
+  try {
+    const episodeSelect = document.getElementById('episode-select');
+    
+    // Clear existing options
+    episodeSelect.innerHTML = '';
+    
+    // Create episode options
+    const episodeCount = season.episodes || 12;
+    for (let i = 1; i <= episodeCount; i++) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = `Episode ${i}`;
+      episodeSelect.appendChild(option);
+    }
+    
+    // Update currentItem to the selected season
+    currentItem = {
+      ...currentItem,
+      id: season.id,
+      title: season.title.english || season.title.romaji || currentItem.title,
+      episodes: season.episodes
+    };
+    
+    // Load first episode by default
+    loadPlayer();
+    
+  } catch (error) {
+    console.error('Error loading anime episodes:', error);
+    createDefaultAnimeEpisodes(season.episodes || 12);
+    loadPlayer();
+  }
 }
 
 function createDefaultAnimeEpisodes(episodeCount) {
@@ -473,16 +466,13 @@ async function loadTVSeasons(item) {
   try { 
     const tvDetails = await fetchTVDetails(item.id); 
      
-    // Filter out specials (season 0) and only show actual seasons 
     const regularSeasons = tvDetails.seasons.filter(season => season.season_number > 0); 
      
     if (regularSeasons.length === 0) { 
-      // If no regular seasons, just load the player 
       loadPlayer(); 
       return; 
     } 
      
-    // Create seasons container 
     const container = document.createElement('div'); 
     container.id = 'seasons-container'; 
     container.innerHTML = ` 
@@ -504,16 +494,13 @@ async function loadTVSeasons(item) {
       </div> 
     `; 
      
-    // Insert before the video player 
     const videoContainer = document.querySelector('.modal-video-container'); 
     videoContainer.parentNode.insertBefore(container, videoContainer); 
      
-    // Load episodes for first season 
     await loadEpisodes(); 
      
   } catch (error) { 
     console.error('Error loading TV details:', error); 
-    // Fallback: just load the player 
     loadPlayer(); 
   } 
 } 
@@ -535,8 +522,6 @@ async function loadEpisodes() {
         episodeSelect.appendChild(option); 
       }); 
     } else { 
-      // Fallback: create default episodes based on episode count 
-      episodeSelect.innerHTML = ''; 
       const episodeCount = Math.min(24, Math.max(1, seasonData.episode_count || 12)); 
       for (let i = 1; i <= episodeCount; i++) { 
         const option = document.createElement('option'); 
@@ -546,12 +531,10 @@ async function loadEpisodes() {
       } 
     } 
      
-    // Load first episode by default 
     loadPlayer(); 
      
   } catch (error) { 
     console.error('Error loading episodes:', error); 
-    // Fallback: create default episodes 
     episodeSelect.innerHTML = ''; 
     for (let i = 1; i <= 12; i++) { 
       const option = document.createElement('option'); 
@@ -564,43 +547,25 @@ async function loadEpisodes() {
 } 
  
 function loadPlayer() { 
-  // Determine content type
   const isMovie = currentItem.media_type === 'movie' || (!currentItem.media_type && currentItem.release_date); 
   const isAnime = currentItem.media_type === 'anime';
    
   if (isMovie) { 
-    // Movie player 
     const embedURL = `https://vidsrc.cc/v2/embed/movie/${currentItem.id}?autoPlay=false&poster=false`; 
     document.getElementById('modal-video').src = embedURL; 
   } else if (isAnime) {
-    // Anime player
     const episodeSelect = document.getElementById('episode-select'); 
-    const seasonSelect = document.getElementById('season-select');
     const episode = episodeSelect ? episodeSelect.value : 1; 
     
-    let animeId = currentItem.id; // Default to main anime ID
-    
-    // If we have seasons data and season selector
-    if (seasonSelect && currentItem.animeSeasons) {
-      const selectedSeasonNumber = parseInt(seasonSelect.value);
-      const selectedSeason = currentItem.animeSeasons.find(s => s.seasonNumber === selectedSeasonNumber);
-      if (selectedSeason) {
-        animeId = selectedSeason.id;
-      }
-    }
-    
-    // Use correct anime ID for the selected season
-    const embedURL = `https://vidsrc.cc/v2/embed/anime/anilist${animeId}/${episode}/sub?autoPlay=false`; 
+    const embedURL = `https://vidsrc.cc/v2/embed/anime/anilist${currentItem.id}/${episode}/sub?autoPlay=false`; 
     document.getElementById('modal-video').src = embedURL;
   } else { 
-    // TV Show player 
     const seasonSelect = document.getElementById('season-select'); 
     const episodeSelect = document.getElementById('episode-select'); 
      
     const season = seasonSelect ? seasonSelect.value : 1; 
     const episode = episodeSelect ? episodeSelect.value : 1; 
      
-    // Regular TV show endpoint 
     const embedURL = `https://vidsrc.cc/v2/embed/tv/${currentItem.id}/${season}/${episode}?autoPlay=false&poster=false`; 
     document.getElementById('modal-video').src = embedURL; 
   } 
@@ -610,26 +575,20 @@ function closeModal() {
   document.getElementById('modal').style.display = 'none'; 
   document.getElementById('modal-video').src = ''; 
    
-  // Clean up seasons container 
   const seasonsContainer = document.getElementById('seasons-container'); 
   if (seasonsContainer) { 
     seasonsContainer.remove(); 
   } 
 } 
  
-// Listen for player events 
 window.addEventListener('message', (event) => { 
   if (event.origin !== 'https://vidsrc.cc') return; 
    
   if (event.data && event.data.type === 'PLAYER_EVENT') { 
     const { event: eventType, currentTime, duration, tmdbId } = event.data.data; 
-     
-    // You can add custom logic here for tracking or UI updates 
     console.log(`Player ${eventType} - ${Math.round(currentTime)}s / ${Math.round(duration)}s`); 
      
-    // Example: Update a progress indicator or save watch progress 
     if (eventType === 'time') { 
-      // Save progress to localStorage or send to backend 
       const progress = (currentTime / duration) * 100; 
       console.log(`Watch progress: ${Math.round(progress)}%`); 
     } 
@@ -653,13 +612,11 @@ async function searchTMDB() {
     return; 
   } 
 
-  // Search both TMDB and AniList
   const [tmdbResults, animeResults] = await Promise.all([
     searchTMDBContent(query),
     searchAnime(query)
   ]);
 
-  // Combine results
   const allResults = [...tmdbResults, ...animeResults];
  
   const container = document.getElementById('search-results'); 
@@ -682,7 +639,6 @@ async function searchTMDBContent(query) {
     const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}`);
     const data = await res.json();
     
-    // Filter out anime from TMDB search results
     return data.results.filter(item => {
       if (!item.poster_path) return false;
       const isJapanese = item.original_language === 'ja';
@@ -696,25 +652,18 @@ async function searchTMDBContent(query) {
 }
  
 async function init() { 
-  try {
-    const [movies, tvShows, anime] = await Promise.all([
-      fetchTrending('movie'),
-      fetchTrending('tv'),
-      fetchTrendingAnime()
-    ]);
-   
-    // Use a mix of content for banner, prioritizing movies
-    const bannerContent = [...movies, ...tvShows];
-    if (bannerContent.length > 0) {
-      displayBanner(bannerContent[Math.floor(Math.random() * bannerContent.length)]);
-    }
-    
-    displayList(movies, 'movies-list'); 
-    displayList(tvShows, 'tvshows-list'); 
-    displayList(anime, 'anime-list');
-  } catch (error) {
-    console.error('Error initializing app:', error);
+  const movies = await fetchTrending('movie'); 
+  const tvShows = await fetchTrending('tv'); 
+  const anime = await fetchTrendingAnime(); 
+ 
+  const bannerContent = [...movies, ...tvShows];
+  if (bannerContent.length > 0) {
+    displayBanner(bannerContent[Math.floor(Math.random() * bannerContent.length)]);
   }
+  
+  displayList(movies, 'movies-list'); 
+  displayList(tvShows, 'tvshows-list'); 
+  displayList(anime, 'anime-list'); 
 } 
  
 init();
