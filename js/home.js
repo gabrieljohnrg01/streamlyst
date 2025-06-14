@@ -621,7 +621,7 @@ function loadPlayer() {
     }
     
     // For anime from AniList, use the anime endpoint with correct season's AniList ID
-    const embedURL = `https://vidsrc.cc/v2/embed/anime/anilist${animeId}/${episode}/sub?autoPlay=false`; 
+    const embedURL = `https://vidsrc.cc/v2/embed/anime/ani${animeId}/${episode}/sub?autoPlay=false`; 
     document.getElementById('modal-video').src = embedURL;
   } else { 
     // TV Show player 
