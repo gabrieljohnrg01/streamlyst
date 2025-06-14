@@ -4,13 +4,6 @@ const IMG_URL = 'https://image.tmdb.org/t/p/original';
 let currentItem;
 let currentSection = 'home';
 
-// Add more genres
-const genres = {
-  movie: ['Action', 'Comedy', 'Drama', 'Horror', 'Romance', 'Sci-Fi', 'Fantasy', 'Thriller', 'Documentary'],
-  tv: ['Action', 'Comedy', 'Drama', 'Horror', 'Romance', 'Sci-Fi', 'Fantasy', 'Thriller', 'Documentary'],
-  anime: ['Action', 'Adventure', 'Fantasy', 'Romance', 'Horror', 'Slice of Life', 'Drama', 'Comedy']
-};
-
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
   init();
@@ -213,7 +206,7 @@ function displayBanner(item) {
   const title = document.getElementById('banner-title');
   
   if (item && item.backdrop_path) {
-    banner.style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%), url(${IMG_URL}${item.backdrop_path})`;
+    banner.style.backgroundImage = `url(${IMG_URL}${item.backdrop_path})`;
     title.textContent = item.title || item.name;
   }
 }
@@ -233,20 +226,7 @@ function displayList(items, containerId) {
     img.alt = item.title || item.name;
     img.loading = 'lazy';
     
-    // Add genres display
-    const genreContainer = document.createElement('div');
-    genreContainer.className = 'genre-container';
-    item.genre_ids.forEach(genreId => {
-      const genre = genres.movie[genreId] || genres.tv[genreId] || genres.anime[genreId];
-      if (genre) {
-        const genreSpan = document.createElement('span');
-                genreSpan.textContent = genre;
-        genreContainer.appendChild(genreSpan);
-      }
-    });
-    
     card.appendChild(img);
-    card.appendChild(genreContainer);
     card.addEventListener('click', () => showDetails(item));
     container.appendChild(card);
   });
@@ -257,9 +237,6 @@ async function showDetails(item) {
     // Show loading state
     document.getElementById('modal-title').textContent = 'Loading...';
     document.getElementById('modal-description').textContent = '';
-    document.getElementById('seasons-container').style.display = 'none';
-    document.getElementById('episodes-container').style.display = 'none';
-    document.getElementById('modal-video-container').style.display = 'none'; // Hide video player initially
     
     // Fetch additional details
     const details = await fetchItemDetails(item);
@@ -269,58 +246,9 @@ async function showDetails(item) {
     document.getElementById('modal-title').textContent = details.title || details.name;
     document.getElementById('modal-description').textContent = details.overview || 'No description available.';
     
-    // Set rating stars
-    const rating = Math.round((details.vote_average || 0) / 2);
-    document.getElementById('modal-rating').innerHTML = '★'.repeat(rating) + '☆'.repeat(5 - rating);
-    
-    // Set year
-    const releaseDate = details.release_date || details.first_air_date;
-    if (releaseDate) {
-      document.getElementById('modal-year').textContent = new Date(releaseDate).getFullYear();
-    }
-    
-    // Set runtime (for movies) or episode runtime (for TV)
-    if (details.runtime) {
-      document.getElementById('modal-runtime').textContent = `${details.runtime} min`;
-    } else if (details.episode_run_time?.length > 0) {
-      document.getElementById('modal-runtime').textContent = `${details.episode_run_time[0]} min/episode`;
-    }
-    
-    // Set genres - enhanced display
-    const genresContainer = document.getElementById('modal-genres');
-    genresContainer.innerHTML = '';
-    if (details.genres?.length > 0) {
-      details.genres.forEach(genre => {
-        const span = document.createElement('span');
-        span.textContent = genre.name;
-        genresContainer.appendChild(span);
-      });
-    }
-    
     // Set poster image
     const posterUrl = details.poster_path ? `${IMG_URL}${details.poster_path}` : 'https://via.placeholder.com/300x450?text=No+Image';
     document.getElementById('modal-image').src = posterUrl;
-    
-    // Set up play button in modal
-    document.querySelector('.modal-play-btn').onclick = () => {
-      if (details.number_of_seasons > 0) {
-        // For TV shows, don't show player until episode is selected
-        alert('Please select an episode to play');
-      } else {
-        // For movies, show player immediately
-        changeServer();
-        document.getElementById('modal-video-container').style.display = 'block';
-        document.querySelector('.modal-video-container').scrollIntoView({ behavior: 'smooth' });
-      }
-    };
-    
-    // Load seasons if it's a TV show
-    if (details.number_of_seasons > 0) {
-      await loadSeasons(details.id);
-      document.getElementById('seasons-container').style.display = 'block';
-    } else {
-      document.getElementById('seasons-container').style.display = 'none';
-    }
     
     // Open modal
     document.getElementById('modal').style.display = 'flex';
@@ -332,135 +260,8 @@ async function showDetails(item) {
   }
 }
 
-async function loadSeasons(tvId) {
-  try {
-    const res = await fetch(`${BASE_URL}/tv/${tvId}?api_key=${API_KEY}`);
-    const data = await res.json();
-    
-    const seasonsContainer = document.getElementById('seasons-container');
-    const seasonsList = document.getElementById('seasons-list');
-    
-    seasonsList.innerHTML = '';
-    seasonsContainer.style.display = 'block';
-    
-    data.seasons.forEach(season => {
-      if (season.season_number === 0) return; // Skip special seasons
-      
-      const seasonCard = document.createElement('div');
-      seasonCard.className = 'season-card';
-      seasonCard.dataset.seasonNumber = season.season_number;
-      
-      seasonCard.innerHTML = `
-        <img src="${season.poster_path ? `${IMG_URL}${season.poster_path}` : 'https://via.placeholder.com/150x225?text=No+Image'}" 
-             alt="Season ${season.season_number}" class="season-poster">
-        <div class="season-info">
-          <h4>Season ${season.season_number}</h4>
-          <p>${season.episode_count} episodes</p>
-        </div>
-      `;
-      
-      seasonCard.addEventListener('click', () => loadEpisodes(tvId, season.season_number));
-      seasonsList.appendChild(seasonCard);
-    });
-    
-    // Load first season by default
-    if (data.seasons.length > 0) {
-      const firstSeason = data.seasons.find(s => s.season_number === 1) || data.seasons[0];
-      loadEpisodes(tvId, firstSeason.season_number);
-    }
-  } catch (error) {
-    console.error('Error loading seasons:', error);
-    document.getElementById('seasons-container').innerHTML = '<p>Failed to load seasons</p>';
-  }
-}
-
-async function loadEpisodes(tvId, seasonNumber) {
-  try {
-    const res = await fetch(`${BASE_URL}/tv/${tvId}/season/${seasonNumber}?api_key=${API_KEY}`);
-    const data = await res.json();
-    
-    const episodesContainer = document.getElementById('episodes-container');
-    const episodesList = document.getElementById('episodes-list');
-    
-    episodesList.innerHTML = '';
-    episodesContainer.style.display = 'block';
-    
-    // Update active season
-    document.querySelectorAll('.season-card').forEach(card => {
-      card.classList.toggle('active', parseInt(card.dataset.seasonNumber) === seasonNumber);
-    });
-    
-    data.episodes.forEach(episode => {
-      const episodeCard = document.createElement('div');
-      episodeCard.className = 'episode-card';
-      
-      episodeCard.innerHTML = `
-        <img src="${episode.still_path ? `${IMG_URL}${episode.still_path}` : 'https://via.placeholder.com/300x169?text=No+Image'}" 
-             alt="${episode.name}" class="episode-poster">
-        <div class="episode-info">
-          <span class="episode-number">Episode ${episode.episode_number}</span>
-          <h4>${episode.name}</h4>
-          <p>${episode.overview || 'No description available.'}</p>
-        </div>
-      `;
-      
-      // Add click handler to play episode
-      episodeCard.addEventListener('click', () => {
-        // Set current episode
-        currentItem = {
-          ...currentItem,
-          season_number: seasonNumber,
-          episode_number: episode.episode_number
-        };
-        
-        // Show and load player
-        changeServer();
-        document.getElementById('modal-video-container').style.display = 'block';
-        document.querySelector('.modal-video-container').scrollIntoView({ behavior: 'smooth' });
-      });
-      
-      episodesList.appendChild(episodeCard);
-    });
-  } catch (error) {
-    console.error('Error loading episodes:', error);
-    document.getElementById('episodes-container').innerHTML = '<p>Failed to load episodes</p>';
-  }
-}
-
-function changeServer() {
-  const server = document.getElementById('server').value;
-  const type = currentItem.media_type === "movie" ? "movie" : "tv";
-  let embedURL = "";
-
-  if (type === "movie") {
-    // For movies
-    if (server === "vidsrc.cc") {
-      embedURL = `https://vidsrc.cc/v2/embed/movie/${currentItem.id}`;
-    } else if (server === "vidsrc.me") {
-      embedURL = `https://vidsrc.net/embed/movie/?tmdb=${currentItem.id}`;
-    } else if (server === "player.videasy.net") {
-      embedURL = `https://player.videasy.net/movie/${currentItem.id}`;
-    }
-  } else {
-    // For TV shows
-    if (server === "vidsrc.cc") {
-      embedURL = `https://vidsrc.cc/v2/embed/tv/${currentItem.id}/${currentItem.season_number}/${currentItem.episode_number}`;
-    } else if (server === "vidsrc.me") {
-      embedURL = `https://vidsrc.net/embed/tv/?tmdb=${currentItem.id}&season=${currentItem.season_number}&episode=${currentItem.episode_number}`;
-    } else if (server === "player.videasy.net") {
-      embedURL = `https://player.videasy.net/tv/${currentItem.id}-${currentItem.season_number}-${currentItem.episode_number}`;
-    }
-  }
-
-  // Remove any ad-related parameters from the URL
-  embedURL = embedURL.replace(/&[^=]*=[^&]*/g, '');
-
-  document.getElementById('modal-video').src = embedURL;
-}
-
 function closeModal() {
   document.getElementById('modal').style.display = 'none';
-  document.getElementById('modal-video').src = '';
   document.body.style.overflow = 'auto';
 }
 
@@ -472,12 +273,6 @@ function openSearchModal() {
 
 function closeSearchModal() {
   document.getElementById('search-modal').style.display = 'none';
-  document.getElementById('search-results').innerHTML = `
-    <div class="search-placeholder">
-      <i class="fas fa-search"></i>
-      <p>Search for your favorite content</p>
-    </div>
-  `;
   document.getElementById('search-input').value = '';
   document.body.style.overflow = 'auto';
 }
@@ -485,16 +280,11 @@ function closeSearchModal() {
 async function searchTMDB() {
   const query = document.getElementById('search-input').value.trim();
   if (!query) {
-    document.getElementById('search-results').innerHTML = `
-      <div class="search-placeholder">
-        <i class="fas fa-search"></i>
-        <p>Search for your favorite content</p>
-      </div>
-    `;
+    document.getElementById('search-results').innerHTML = '';
     return;
   }
 
-  try {
+    try {
     const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}`);
     const data = await res.json();
 
@@ -502,12 +292,7 @@ async function searchTMDB() {
     container.innerHTML = '';
     
     if (data.results.length === 0) {
-      container.innerHTML = `
-        <div class="search-placeholder">
-          <i class="fas fa-exclamation-circle"></i>
-          <p>No results found for "${query}"</p>
-        </div>
-      `;
+      container.innerHTML = `<p>No results found for "${query}"</p>`;
       return;
     }
 
@@ -531,12 +316,7 @@ async function searchTMDB() {
     });
   } catch (error) {
     console.error('Error searching:', error);
-    document.getElementById('search-results').innerHTML = `
-      <div class="search-placeholder">
-        <i class="fas fa-exclamation-circle"></i>
-        <p>Error loading results. Please try again.</p>
-      </div>
-    `;
+    document.getElementById('search-results').innerHTML = `<p>Error loading results. Please try again.</p>`;
   }
 }
 

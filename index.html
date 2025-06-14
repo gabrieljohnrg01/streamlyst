@@ -5,14 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Streamlyst | Your Ultimate Streaming Destination</title>
   <link rel="stylesheet" href="css/home.css">
-  <link rel="preload" href="css/home.css" as="style">
-  <link rel="preload" href="js/home.js" as="script">
-  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
-  <script defer src="js/home.js"></script>
 </head>
 
 <body>
@@ -28,19 +24,10 @@
     </div>
     <div class="navbar-right">
       <button class="search-btn" onclick="openSearchModal()"><i class="fas fa-search"></i></button>
-      <div class="profile-dropdown">
-        <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img">
-        <div class="dropdown-content">
-          <a href="#"><i class="fas fa-user"></i> Profile</a>
-          <a href="#"><i class="fas fa-cog"></i> Settings</a>
-          <a href="#"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
-        </div>
-      </div>
     </div>
   </div>
 
   <div class="hero-banner" id="banner">
-    <div class="banner-overlay"></div>
     <div class="banner-content">
       <h1 id="banner-title"></h1>
       <div class="banner-actions">
@@ -67,31 +54,9 @@
         </div>
         <div class="modal-text">
           <h2 id="modal-title"></h2>
-          <div class="modal-meta">
-            <span class="modal-rating" id="modal-rating"></span>
-            <span class="modal-year" id="modal-year"></span>
-            <span class="modal-runtime" id="modal-runtime"></span>
-          </div>
           <p id="modal-description"></p>
           <div class="modal-genres" id="modal-genres"></div>
-          
-          <div class="server-selector">
-            <label for="server">Streaming Server:</label>
-            <select id="server" onchange="changeServer()">
-              <option value="vidsrc.cc">Streamlyst Premium</option>
-              <option value="vidsrc.me">Streamlyst Standard</option>
-              <option value="player.videasy.net">Streamlyst Basic</option>
-            </select>
-          </div>
         </div>
-      </div>
-      <div class="seasons-container" id="seasons-container">
-        <h3>Seasons</h3>
-        <div class="seasons-list" id="seasons-list"></div>
-      </div>
-      <div class="episodes-container" id="episodes-container">
-        <h3>Episodes</h3>
-        <div class="episodes-list" id="episodes-list"></div>
       </div>
       <div class="modal-video-container" id="modal-video-container">
         <iframe id="modal-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
@@ -102,62 +67,15 @@
   <div class="search-modal" id="search-modal">
     <div class="search-header">
       <span class="close" onclick="closeSearchModal()"><i class="fas fa-times"></i></span>
-      <div class="search-input-container">
-        <i class="fas fa-search"></i>
-        <input type="text" id="search-input" placeholder="Search for movies, TV shows, anime..." oninput="searchTMDB()" autocomplete="off" />
-      </div>
+      <input type="text" id="search-input" placeholder="Search..." oninput="searchTMDB()" autocomplete="off" />
     </div>
-    <div class="search-results" id="search-results">
-      <div class="search-placeholder">
-        <i class="fas fa-search"></i>
-        <p>Search for your favorite content</p>
-      </div>
-    </div>
+    <div class="search-results" id="search-results"></div>
   </div>
 
   <footer class="footer">
-    <div class="footer-content">
-      <img src="images/logo.png" alt="Streamlyst" class="footer-logo" />
-      <div class="footer-links">
-        <div class="footer-column">
-          <h3>Navigation</h3>
-          <a href="#">Home</a>
-          <a href="#">Movies</a>
-          <a href="#">TV Shows</a>
-          <a href="#">Anime</a>
-        </div>
-        <div class="footer-column">
-          <h3>Legal</h3>
-          <a href="#">Terms of Service</a>
-          <a href="#">Privacy Policy</a>
-          <a href="#">DMCA</a>
-        </div>
-        <div class="footer-column">
-          <h3>Company</h3>
-          <a href="#">About Us</a>
-          <a href="#">Contact</a>
-          <a href="#">Careers</a>
-        </div>
-      </div>
-      <div class="social-links">
-        <a href="#"><i class="fab fa-facebook"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-discord"></i></a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2025 Streamlyst. All rights reserved.</p>
-      <div class="language-selector">
-        <i class="fas fa-globe"></i>
-        <select>
-          <option>English</option>
-          <option>Español</option>
-          <option>日本語</option>
-          <option>Français</option>
-        </select>
-      </div>
-    </div>
+    <p>&copy; 2025 Streamlyst. All rights reserved.</p>
   </footer>
+
+  <script src="js/home.js"></script>
 </body>
 </html>
