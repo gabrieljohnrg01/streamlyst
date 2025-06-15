@@ -7,32 +7,50 @@
     <title>streamlyst</title>
     <link rel="stylesheet" href="css/home.css">
     <style>
-        .ad-top, .ad-bottom {
-            width: 100%;
-            text-align: center;
-            position: fixed;
-            left: 0;
-            z-index: 9999;
-        }
-        .ad-top { top: 0; }
-        .ad-bottom { bottom: 0; }
+    /* Base styles for desktop */
+    .ad-top, .ad-bottom {
+        width: 100%;
+        text-align: center;
+        position: fixed;
+        left: 0;
+        z-index: 9999;
+    }
+    .ad-top { top: 0; }
+    .ad-bottom { bottom: 0; }
 
+    .ad-left, .ad-right {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 160px;
+        z-index: 9999;
+    }
+    .ad-left { left: 0; }
+    .ad-right { right: 0; }
+
+    .content {
+        margin-top: 100px;
+        margin-bottom: 100px;
+        padding-left: 170px;
+        padding-right: 170px;
+    }
+
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
         .ad-left, .ad-right {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 160px;
-            z-index: 9999;
+            display: none !important; /* Hide side ads on mobile */
         }
-        .ad-left { left: 0; }
-        .ad-right { right: 0; }
+
+        .ad-top, .ad-bottom {
+            height: 50px;
+        }
 
         .content {
-            margin-top: 100px;
-            margin-bottom: 100px;
-            padding-left: 170px;
-            padding-right: 170px;
+            margin-top: 60px;
+            margin-bottom: 60px;
+            padding: 10px; /* Reduce side padding on mobile */
         }
+    }
     </style>
 </head>
 <body>
