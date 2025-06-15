@@ -453,37 +453,67 @@ async function loadEpisodes() {
   } 
 } 
  
-function loadPlayer() { 
+function loadPlayer() {
+  // Prevent popup abuse on each player load
+  const originalOpen = window.open;
+  window.open = function () {
+    console.warn('Blocked popup from player.');
+    return null;
+  };
+  setTimeout(() => {
+    window.open = originalOpen;
+  }, 1000);
+
+  // Remove any old overlay
+  const existingOverlay = document.getElementById('click-overlay');
+  if (existingOverlay) existingOverlay.remove();
+
   // Determine if it's a movie, TV show, or anime
-  const isMovie = currentItem.media_type === 'movie' || (!currentItem.media_type && currentItem.release_date); 
+  const isMovie = currentItem.media_type === 'movie' || (!currentItem.media_type && currentItem.release_date);
   const isAnime = currentItem.media_type === 'anime';
-   
-  if (isMovie) { 
-    // Movie player 
-    const embedURL = `https://vidsrc.cc/v2/embed/movie/${currentItem.id}?autoPlay=false&poster=false`; 
-    document.getElementById('modal-video').src = embedURL; 
+
+  let embedURL;
+  if (isMovie) {
+    embedURL = `https://vidsrc.cc/v2/embed/movie/${currentItem.id}?autoPlay=false&poster=false`;
   } else if (isAnime) {
-    // Anime player - use AniList ID with anime endpoint
-    const episodeSelect = document.getElementById('episode-select'); 
-    const episode = episodeSelect ? episodeSelect.value : 1; 
-    
-    // For anime from AniList, use the anime endpoint with AniList ID
-    const embedURL = `https://vidsrc.cc/v2/embed/anime/ani${currentItem.id}/${episode}/sub?autoPlay=false`; 
-    document.getElementById('modal-video').src = embedURL;
-  } else { 
-    // TV Show player 
-    const seasonSelect = document.getElementById('season-select'); 
-    const episodeSelect = document.getElementById('episode-select'); 
-     
-    const season = seasonSelect ? seasonSelect.value : 1; 
-    const episode = episodeSelect ? episodeSelect.value : 1; 
-     
-    // Regular TV show endpoint 
-    const embedURL = `https://vidsrc.cc/v2/embed/tv/${currentItem.id}/${season}/${episode}?autoPlay=false&poster=false`; 
-    document.getElementById('modal-video').src = embedURL; 
-  } 
-} 
- 
+    const episodeSelect = document.getElementById('episode-select');
+    const episode = episodeSelect ? episodeSelect.value : 1;
+    embedURL = `https://vidsrc.cc/v2/embed/anime/ani${currentItem.id}/${episode}/sub?autoPlay=false`;
+  } else {
+    const seasonSelect = document.getElementById('season-select');
+    const episodeSelect = document.getElementById('episode-select');
+    const season = seasonSelect ? seasonSelect.value : 1;
+    const episode = episodeSelect ? episodeSelect.value : 1;
+    embedURL = `https://vidsrc.cc/v2/embed/tv/${currentItem.id}/${season}/${episode}?autoPlay=false&poster=false`;
+  }
+
+  // Set the player source
+  const player = document.getElementById('modal-video');
+  player.src = embedURL;
+
+  // Add transparent overlay to block first click (ad prevention)
+  const overlay = document.createElement('div');
+  overlay.id = 'click-overlay';
+  Object.assign(overlay.style, {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 9999,
+    backgroundColor: 'transparent',
+    cursor: 'pointer',
+  });
+
+  overlay.onclick = () => {
+    overlay.remove();
+  };
+
+  const container = player.parentElement;
+  container.style.position = 'relative';
+  container.appendChild(overlay);
+}
+
 function closeModal() { 
   document.getElementById('modal').style.display = 'none'; 
   document.getElementById('modal-video').src = ''; 
