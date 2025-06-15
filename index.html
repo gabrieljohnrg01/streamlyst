@@ -4,14 +4,68 @@
     <meta name="6a97888e-site-verification" content="a586a280e346cb1e67bf2acf5cc81ff2">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie & TV Streaming</title>
+    <title>streamlyst</title>
     <link rel="stylesheet" href="css/home.css">
+    <style>
+        .ad-top, .ad-bottom {
+            width: 100%;
+            text-align: center;
+            position: fixed;
+            left: 0;
+            z-index: 9999;
+        }
+        .ad-top { top: 0; }
+        .ad-bottom { bottom: 0; }
+
+        .ad-left, .ad-right {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 160px;
+            z-index: 9999;
+        }
+        .ad-left { left: 0; }
+        .ad-right { right: 0; }
+
+        .content {
+            margin-top: 100px;
+            margin-bottom: 100px;
+            padding-left: 170px;
+            padding-right: 170px;
+        }
+    </style>
 </head>
 <body>
+
+    <!-- ExoClick Banner Ads -->
+    <div class="ad-top">
+        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+        <ins class="eas6a97888e2" data-zoneid="5644240"></ins>
+        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+    </div>
+
+    <div class="ad-bottom">
+        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+        <ins class="eas6a97888e2" data-zoneid="5644242"></ins>
+        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+    </div>
+
+    <div class="ad-left">
+        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+        <ins class="eas6a97888e2" data-zoneid="5644244"></ins>
+        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+    </div>
+
+    <div class="ad-right">
+        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+        <ins class="eas6a97888e2" data-zoneid="5644246"></ins>
+        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+    </div>
+
     <!-- Header -->
     <header>
         <div class="navbar">
-            <h1>Streamlyst</h1>
+            <h1>streamlyst</h1>
             <div class="nav-buttons">
                 <button onclick="openSearchModal()" class="search-btn">🔍 Search</button>
             </div>
