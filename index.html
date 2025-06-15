@@ -1,166 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="6a97888e-site-verification" content="a586a280e346cb1e67bf2acf5cc81ff2">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>streamlyst</title>
-    <link rel="stylesheet" href="css/home.css">
-    <style>
-    /* Base styles for desktop */
+  <meta name="6a97888e-site-verification" content="a586a280e346cb1e67bf2acf5cc81ff2">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie & TV Streaming</title>
+  <link rel="stylesheet" href="css/home.css">
+
+  <style>
+    /* ===== AD STYLES ===== */
     .ad-top, .ad-bottom {
-        width: 100%;
-        text-align: center;
-        position: fixed;
-        left: 0;
-        z-index: 9999;
+      position: fixed;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      z-index: 9999;
+      height: 90px;
     }
+
     .ad-top { top: 0; }
     .ad-bottom { bottom: 0; }
 
     .ad-left, .ad-right {
-        position: fixed;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 160px;
-        z-index: 9999;
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 160px;
+      z-index: 9999;
     }
+
     .ad-left { left: 0; }
     .ad-right { right: 0; }
 
     .content {
-        margin-top: 100px;
-        margin-bottom: 100px;
-        padding-left: 170px;
-        padding-right: 170px;
+      margin-top: 100px;
+      margin-bottom: 100px;
+      padding-left: 170px;
+      padding-right: 170px;
     }
 
-    /* Mobile Optimization */
+    /* Tablets */
+    @media (max-width: 1024px) {
+      .ad-left, .ad-right {
+        width: 120px;
+      }
+      .content {
+        padding-left: 130px;
+        padding-right: 130px;
+      }
+    }
+
+    /* Phones */
     @media (max-width: 768px) {
-        .ad-left, .ad-right {
-            display: none !important; /* Hide side ads on mobile */
-        }
+      .ad-left, .ad-right {
+        display: none !important;
+      }
 
-        .ad-top, .ad-bottom {
-            height: 50px;
-        }
+      .ad-top, .ad-bottom {
+        height: 50px;
+      }
 
-        .content {
-            margin-top: 60px;
-            margin-bottom: 60px;
-            padding: 10px; /* Reduce side padding on mobile */
-        }
+      .content {
+        margin-top: 60px;
+        margin-bottom: 60px;
+        padding: 10px;
+      }
     }
-    </style>
+
+    /* Very small screens */
+    @media (max-width: 480px) {
+      .ad-top, .ad-bottom {
+        height: 40px;
+      }
+
+      .content {
+        margin-top: 50px;
+        margin-bottom: 50px;
+      }
+    }
+
+    /* Very large screens */
+    @media (min-width: 1920px) {
+      .ad-left, .ad-right {
+        width: 200px;
+      }
+
+      .content {
+        padding-left: 220px;
+        padding-right: 220px;
+      }
+    }
+
+    .modal {
+      z-index: 10000; /* Ensure modals appear over ads */
+    }
+  </style>
 </head>
 <body>
 
-    <!-- ExoClick Banner Ads -->
-    <div class="ad-top">
-        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-        <ins class="eas6a97888e2" data-zoneid="5644240"></ins>
-        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+  <!-- === Ads === -->
+  <div class="ad-top">
+    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+    <ins class="eas6a97888e2" data-zoneid="5644240"></ins>
+    <script>(AdProvider = window.AdProvider || []).push({ serve: {} });</script>
+  </div>
+
+  <div class="ad-bottom">
+    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+    <ins class="eas6a97888e2" data-zoneid="5644242"></ins>
+    <script>(AdProvider = window.AdProvider || []).push({ serve: {} });</script>
+  </div>
+
+  <div class="ad-left">
+    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+    <ins class="eas6a97888e2" data-zoneid="5644244"></ins>
+    <script>(AdProvider = window.AdProvider || []).push({ serve: {} });</script>
+  </div>
+
+  <div class="ad-right">
+    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
+    <ins class="eas6a97888e2" data-zoneid="5644246"></ins>
+    <script>(AdProvider = window.AdProvider || []).push({ serve: {} });</script>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="navbar">
+      <h1>Streamlyst</h1>
+      <div class="nav-buttons">
+        <button onclick="openSearchModal()" class="search-btn">🔍 Search</button>
+      </div>
     </div>
+  </header>
 
-    <div class="ad-bottom">
-        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-        <ins class="eas6a97888e2" data-zoneid="5644242"></ins>
-        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+  <!-- Banner Section -->
+  <section id="banner" class="banner">
+    <div class="banner-content">
+      <h2 id="banner-title">Loading...</h2>
     </div>
+  </section>
 
-    <div class="ad-left">
-        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-        <ins class="eas6a97888e2" data-zoneid="5644244"></ins>
-        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
-    </div>
-
-    <div class="ad-right">
-        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-        <ins class="eas6a97888e2" data-zoneid="5644246"></ins>
-        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
-    </div>
-
-    <!-- Header -->
-    <header>
-        <div class="navbar">
-            <h1>streamlyst</h1>
-            <div class="nav-buttons">
-                <button onclick="openSearchModal()" class="search-btn">🔍 Search</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Banner Section -->
-    <section id="banner" class="banner">
-        <div class="banner-content">
-            <h2 id="banner-title">Loading...</h2>
-        </div>
+  <!-- Content -->
+  <main class="content">
+    <section class="media-section">
+      <h3>Trending Movies</h3>
+      <div id="movies-list" class="media-list"></div>
     </section>
 
-    <!-- Content Sections -->
-    <main class="content">
-        <section class="media-section">
-            <h3>Trending Movies</h3>
-            <div id="movies-list" class="media-list"></div>
-        </section>
+    <section class="media-section">
+      <h3>Trending TV Shows</h3>
+      <div id="tvshows-list" class="media-list"></div>
+    </section>
 
-        <section class="media-section">
-            <h3>Trending TV Shows</h3>
-            <div id="tvshows-list" class="media-list"></div>
-        </section>
+    <section class="media-section">
+      <h3>Trending Anime</h3>
+      <div id="anime-list" class="media-list"></div>
+    </section>
+  </main>
 
-        <section class="media-section">
-            <h3>Trending Anime</h3>
-            <div id="anime-list" class="media-list"></div>
-        </section>
-    </main>
-
-    <!-- Video Modal -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modal-title">Title</h2>
-                <button onclick="closeModal()" class="close-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-info">
-                    <img id="modal-image" src="" alt="Poster">
-                    <div class="modal-details">
-                        <div id="modal-rating" class="rating"></div>
-                        <p id="modal-description">Description</p>
-                    </div>
-                </div>
-                <div class="modal-video-container">
-                    <iframe id="modal-video" allowfullscreen></iframe>
-                </div>
-            </div>
+  <!-- Video Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title">Title</h2>
+        <button onclick="closeModal()" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-info">
+          <img id="modal-image" src="" alt="Poster">
+          <div class="modal-details">
+            <div id="modal-rating" class="rating"></div>
+            <p id="modal-description">Description</p>
+          </div>
         </div>
-    </div>
-
-    <!-- Search Modal -->
-    <div id="search-modal" class="modal">
-        <div class="modal-content search-modal-content">
-            <div class="modal-header">
-                <h2>Search Movies & TV Shows</h2>
-                <button onclick="closeSearchModal()" class="close-btn">&times;</button>
-            </div>
-            <div class="search-container">
-                <input 
-                    type="text" 
-                    id="search-input" 
-                    placeholder="Search for movies, TV shows, anime..." 
-                    oninput="searchTMDB()"
-                >
-            </div>
-            <div id="search-results" class="media-list"></div>
+        <div class="modal-video-container">
+          <iframe id="modal-video" allowfullscreen></iframe>
         </div>
+      </div>
     </div>
+  </div>
 
-    <script src="js/home.js"></script>
+  <!-- Search Modal -->
+  <div id="search-modal" class="modal">
+    <div class="modal-content search-modal-content">
+      <div class="modal-header">
+        <h2>Search Movies & TV Shows</h2>
+        <button onclick="closeSearchModal()" class="close-btn">&times;</button>
+      </div>
+      <div class="search-container">
+        <input 
+          type="text" 
+          id="search-input" 
+          placeholder="Search for movies, TV shows, anime..." 
+          oninput="searchTMDB()"
+        >
+      </div>
+      <div id="search-results" class="media-list"></div>
+    </div>
+  </div>
 
-    <footer style="text-align: center; font-size: 0.9em; padding: 20px;">
-  <p>Disclaimer: streamlyst does not host or upload any video content. All videos are embedded from third-party sources.</p>
-    </footer>
-    
+  <!-- Disclaimer -->
+  <footer style="text-align: center; font-size: 0.9em; padding: 20px;">
+    <p>Disclaimer: Streamlyst does not host or upload any video content. All videos are embedded from third-party sources.</p>
+  </footer>
+
+  <script src="js/home.js"></script>
 </body>
 </html>
