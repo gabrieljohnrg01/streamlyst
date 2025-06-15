@@ -468,7 +468,7 @@ function loadPlayer() {
     const episode = episodeSelect ? episodeSelect.value : 1; 
     
     // For anime from AniList, use the anime endpoint with AniList ID
-    const embedURL = `https://vidsrc.cc/v2/embed/anime/anilist${currentItem.id}/${episode}/sub?autoPlay=false`; 
+    const embedURL = `https://vidsrc.cc/v2/embed/anime/ani${currentItem.id}/${episode}/sub?autoPlay=false`; 
     document.getElementById('modal-video').src = embedURL;
   } else { 
     // TV Show player 
