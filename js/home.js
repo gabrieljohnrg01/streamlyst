@@ -334,7 +334,7 @@ function loadPlayer() {
    
   if (isMovie) { 
     // Movie player 
-    const embedURL = `https://vidsrc.cc/v3/embed/movie/${currentItem.id}?autoPlay=false&poster=false`; 
+    const embedURL = `https://vidsrc.cc/v2/embed/movie/${currentItem.id}?autoPlay=false&poster=false`; 
     document.getElementById('modal-video').src = embedURL; 
   } else { 
     // TV Show or Anime player 
@@ -347,17 +347,17 @@ function loadPlayer() {
     // Check if it's anime and we have AniList ID
     if (isAnime && currentItem.anilistId) { 
       // Use AniList ID for anime playback - modify URL structure as needed
-      const embedURL = `https://vidsrc.cc/v2/embed/anime/${currentItem.anilistId}/${episode}/sub?autoPlay=false`; 
+      const embedURL = `https://vidsrc.cc/v2/embed/anime/ani${currentItem.anilistId}/${episode}/sub?autoPlay=false`; 
       document.getElementById('modal-video').src = embedURL; 
       console.log(`Loading anime with AniList ID: ${currentItem.anilistId}, Episode: ${episode}`);
     } else if (isAnime) {
       // Fallback to TMDB ID for anime if no AniList ID found
-      const embedURL = `https://vidsrc.cc/v2/embed/anime/tmdb${currentItem.id}/${episode}/sub?autoPlay=false`; 
+      const embedURL = `https://vidsrc.cc/v2/embed/anime/${currentItem.id}/${episode}/sub?autoPlay=false`; 
       document.getElementById('modal-video').src = embedURL; 
       console.log(`Loading anime with TMDB ID: ${currentItem.id}, Episode: ${episode}`);
     } else { 
       // Regular TV show endpoint 
-      const embedURL = `https://vidsrc.cc/v3/embed/tv/${currentItem.id}/${season}/${episode}?autoPlay=false&poster=false`; 
+      const embedURL = `https://vidsrc.cc/v2/embed/tv/${currentItem.id}/${season}/${episode}?autoPlay=false&poster=false`; 
       document.getElementById('modal-video').src = embedURL; 
     } 
   } 
