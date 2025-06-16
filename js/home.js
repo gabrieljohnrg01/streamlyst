@@ -31,49 +31,64 @@ async function fetchTVDetails(id) {
   return data; 
 }
 
-// Enhanced function to get all seasons including episode groups
+// Enhanced function to get seasons only from the "Seasons" episode group
 async function fetchAllSeasons(id) {
   try {
-    // Get basic TV details
-    const tvDetails = await fetchTVDetails(id);
-    let allSeasons = [...tvDetails.seasons];
+    let allSeasons = [];
     
-    // Try to get episode groups for additional season information
+    // Try to get episode groups and look specifically for "Seasons"
     try {
       const episodeGroupsRes = await fetch(`${BASE_URL}/tv/${id}/episode_groups?api_key=${API_KEY}`);
       const episodeGroupsData = await episodeGroupsRes.json();
       
       if (episodeGroupsData.results && episodeGroupsData.results.length > 0) {
-        // Look for season-based episode groups
-        for (const group of episodeGroupsData.results) {
-          if (group.type === 1 || group.name.toLowerCase().includes('season')) { // Type 1 is typically season grouping
-            try {
-              const groupDetailsRes = await fetch(`${BASE_URL}/tv/episode_group/${group.id}?api_key=${API_KEY}`);
-              const groupDetails = await groupDetailsRes.json();
+        // Look for episode group specifically named "Seasons"
+        const seasonsGroup = episodeGroupsData.results.find(group => group.name === 'Seasons');
+        
+        if (seasonsGroup) {
+          try {
+            const groupDetailsRes = await fetch(`${BASE_URL}/tv/episode_group/${seasonsGroup.id}?api_key=${API_KEY}`);
+            const groupDetails = await groupDetailsRes.json();
+            
+            // Extract seasons from the "Seasons" episode group
+            if (groupDetails.groups) {
+              groupDetails.groups.forEach((seasonGroup, index) => {
+                // Try to extract season number from the group name or use index + 1
+                let seasonNumber = index + 1;
+                if (seasonGroup.name && seasonGroup.name.match(/season\s*(\d+)/i)) {
+                  seasonNumber = parseInt(seasonGroup.name.match(/season\s*(\d+)/i)[1]);
+                }
+                
+                // Skip specials (season 0) and groups that might be specials
+                const isSpecial = seasonNumber === 0 || 
+                                 seasonGroup.name.toLowerCase().includes('special') ||
+                                 seasonGroup.name.toLowerCase().includes('ova') ||
+                                 seasonGroup.name.toLowerCase().includes('movie');
+                
+                if (!isSpecial && seasonGroup.episodes && seasonGroup.episodes.length > 0) {
+                  allSeasons.push({
+                    season_number: seasonNumber,
+                    name: seasonGroup.name || `Season ${seasonNumber}`,
+                    episode_count: seasonGroup.episodes.length,
+                    air_date: seasonGroup.episodes[0]?.air_date,
+                    poster_path: seasonGroup.episodes[0]?.still_path,
+                    overview: `Season ${seasonNumber}`,
+                    id: `group_${seasonNumber}`,
+                    episodes: seasonGroup.episodes
+                  });
+                }
+              });
               
-              // Extract additional seasons from episode groups
-              if (groupDetails.groups) {
-                groupDetails.groups.forEach((seasonGroup, index) => {
-                  const seasonNumber = index + 1;
-                  // Check if this season is not already in our list
-                  const existingSeason = allSeasons.find(s => s.season_number === seasonNumber);
-                  if (!existingSeason && seasonGroup.episodes && seasonGroup.episodes.length > 0) {
-                    allSeasons.push({
-                      season_number: seasonNumber,
-                      name: seasonGroup.name || `Season ${seasonNumber}`,
-                      episode_count: seasonGroup.episodes.length,
-                      air_date: seasonGroup.episodes[0]?.air_date,
-                      poster_path: seasonGroup.episodes[0]?.still_path,
-                      overview: `Season ${seasonNumber}`,
-                      id: `group_${seasonNumber}`,
-                      episodes: seasonGroup.episodes
-                    });
-                  }
-                });
+              // Sort seasons by season number
+              allSeasons.sort((a, b) => a.season_number - b.season_number);
+              
+              // If we found seasons from the "Seasons" episode group, return them
+              if (allSeasons.length > 0) {
+                return allSeasons;
               }
-            } catch (error) {
-              console.warn('Error fetching episode group details:', error);
             }
+          } catch (error) {
+            console.warn('Error fetching "Seasons" episode group details:', error);
           }
         }
       }
@@ -81,36 +96,10 @@ async function fetchAllSeasons(id) {
       console.warn('Error fetching episode groups:', error);
     }
     
-    // Also try to detect seasons by checking for episodes in higher season numbers
-    const maxSeasonFromDetails = Math.max(...allSeasons.map(s => s.season_number));
-    for (let seasonNum = 1; seasonNum <= Math.max(maxSeasonFromDetails + 2, 5); seasonNum++) {
-      if (!allSeasons.find(s => s.season_number === seasonNum)) {
-        try {
-          const seasonRes = await fetch(`${BASE_URL}/tv/${id}/season/${seasonNum}?api_key=${API_KEY}`);
-          if (seasonRes.ok) {
-            const seasonData = await seasonRes.json();
-            if (seasonData.episodes && seasonData.episodes.length > 0) {
-              allSeasons.push({
-                season_number: seasonNum,
-                name: seasonData.name || `Season ${seasonNum}`,
-                episode_count: seasonData.episodes.length,
-                air_date: seasonData.air_date,
-                poster_path: seasonData.poster_path,
-                overview: seasonData.overview,
-                id: seasonData.id || seasonNum
-              });
-            }
-          }
-        } catch (error) {
-          // Season doesn't exist, continue
-          continue;
-        }
-      }
-    }
-    
-    // Sort seasons by season number and filter out specials (season 0)
-    return allSeasons
-      .filter(season => season.season_number > 0)
+    // Fallback: If no "Seasons" episode group found, use basic TV details
+    const tvDetails = await fetchTVDetails(id);
+    return tvDetails.seasons
+      .filter(season => season.season_number > 0) // Exclude specials (season 0)
       .sort((a, b) => a.season_number - b.season_number);
       
   } catch (error) {
