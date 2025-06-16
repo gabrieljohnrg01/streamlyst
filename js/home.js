@@ -22,8 +22,8 @@ async function fetchTrending(type) {
 async function fetchTrendingAnime() {
   const query = `
     query {
-      Page(page: 1, perPage: 20) {
-        media(type: ANIME, sort: TRENDING_DESC, status: RELEASING) {
+      Page(page: 1, perPage: 50) {
+        media(type: ANIME, sort: TRENDING_DESC, status_in: [RELEASING, NOT_YET_RELEASED, FINISHED]) {
           id
           title {
             romaji
@@ -55,6 +55,18 @@ async function fetchTrendingAnime() {
               name
             }
           }
+          relations {
+            edges {
+              relationType(version: 2)
+              node {
+                id
+                title {
+                  romaji
+                  english
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -63,31 +75,53 @@ async function fetchTrendingAnime() {
   try {
     const response = await fetch(ANILIST_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query })
     });
 
     const data = await response.json();
+    const mediaList = data.data.Page.media;
 
-    // Transform AniList data to match TMDB format for compatibility
-    return data.data.Page.media.map(anime => ({
-      id: anime.id,
-      name: anime.title.english || anime.title.romaji,
-      title: anime.title.english || anime.title.romaji,
-      overview: anime.description ? anime.description.replace(/<[^>]*>/g, '') : 'No description available',
-      poster_path: anime.coverImage.large,
-      backdrop_path: anime.bannerImage,
-      vote_average: anime.averageScore ? anime.averageScore / 10 : 0,
-      media_type: 'anime',
-      original_language: 'ja',
-      genre_ids: [16], // Animation genre ID
-      genres: anime.genres,
-      episodes: anime.episodes,
-      status: anime.status,
-      studios: anime.studios.nodes.map(studio => studio.name)
-    }));
+    const seenFranchises = new Set();
+
+    const grouped = [];
+
+    for (const anime of mediaList) {
+      // Determine franchise key (original or prequel title)
+      const original = anime.relations.edges.find(edge =>
+        ['PREQUEL', 'ORIGINAL'].includes(edge.relationType)
+      );
+
+      const franchiseKey = original?.node?.title?.romaji || anime.title.romaji;
+
+      if (seenFranchises.has(franchiseKey)) continue;
+
+      seenFranchises.add(franchiseKey);
+
+      grouped.push({
+        id: anime.id,
+        name: anime.title.english || anime.title.romaji,
+        title: anime.title.english || anime.title.romaji,
+        overview: anime.description ? anime.description.replace(/<[^>]*>/g, '') : 'No description available',
+        poster_path: anime.coverImage.large,
+        backdrop_path: anime.bannerImage,
+        vote_average: anime.averageScore ? anime.averageScore / 10 : 0,
+        media_type: 'anime',
+        original_language: 'ja',
+        genre_ids: [16],
+        genres: anime.genres,
+        episodes: anime.episodes,
+        status: anime.status,
+        studios: anime.studios.nodes.map(studio => studio.name),
+        // Optional: Add all related season IDs if you want to support cross-season browsing later
+        related_seasons: anime.relations.edges
+          .filter(edge => ['PREQUEL', 'SEQUEL'].includes(edge.relationType))
+          .map(edge => edge.node.id)
+      });
+    }
+
+    return grouped;
+
   } catch (error) {
     console.error('Error fetching anime from AniList:', error);
     return [];
