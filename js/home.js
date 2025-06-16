@@ -34,18 +34,54 @@ async function fetchTVDetails(id) {
   return data; 
 }
 
-// Simple function to get just the AniList ID
-async function getAniListId(tmdbItem) {
+// Function to get AniList ID for a specific season
+async function getAniListIdForSeason(tmdbItem, seasonNumber) {
+  // Create search query for specific season
+  let searchTitle = tmdbItem.name || tmdbItem.title;
+  
+  // Add season info to search if it's not season 1
+  if (seasonNumber > 1) {
+    // Try different season formats
+    const seasonFormats = [
+      `${searchTitle} Season ${seasonNumber}`,
+      `${searchTitle} S${seasonNumber}`,
+      `${searchTitle} ${seasonNumber}nd Season`,
+      `${searchTitle} ${seasonNumber}rd Season`,
+      `${searchTitle} ${seasonNumber}th Season`,
+      `${searchTitle} Part ${seasonNumber}`,
+      `${searchTitle} ${romanNumerals[seasonNumber] || seasonNumber}`
+    ];
+    
+    // Try each format until we find a match
+    for (const searchQuery of seasonFormats) {
+      const anilistId = await searchAniList(searchQuery);
+      if (anilistId) {
+        return anilistId;
+      }
+    }
+  }
+  
+  // For season 1 or if no specific season found, search with base title
+  return await searchAniList(searchTitle);
+}
+
+// Helper function to search AniList
+async function searchAniList(searchQuery) {
   const query = `
     query ($search: String) {
       Media (search: $search, type: ANIME) {
         id
+        title {
+          romaji
+          english
+          native
+        }
       }
     }
   `;
 
   const variables = {
-    search: tmdbItem.name || tmdbItem.title
+    search: searchQuery
   };
 
   try {
@@ -69,10 +105,24 @@ async function getAniListId(tmdbItem) {
     
     return null;
   } catch (error) {
-    console.warn('Error fetching AniList ID:', error);
+    console.warn('Error searching AniList:', error);
     return null;
   }
 }
+
+// Roman numerals for season search
+const romanNumerals = {
+  1: 'I',
+  2: 'II', 
+  3: 'III',
+  4: 'IV',
+  5: 'V',
+  6: 'VI',
+  7: 'VII',
+  8: 'VIII',
+  9: 'IX',
+  10: 'X'
+};
 
 // Enhanced function to get seasons only from the "Seasons" episode group
 async function fetchAllSeasons(id) {
@@ -185,21 +235,11 @@ async function showDetails(item) {
   // Determine content type properly 
   const isMovie = item.media_type === 'movie' || (!item.media_type && item.release_date); 
   const isTVShow = item.media_type === 'tv' || (!item.media_type && item.first_air_date); 
-  const isAnime = item.original_language === 'ja' && item.genre_ids && item.genre_ids.includes(16);
    
   if (isMovie) { 
     // For movies, load player directly 
     loadPlayer(); 
   } else if (isTVShow) { 
-    // For anime, just get the AniList ID for playing
-    if (isAnime) {
-      const anilistId = await getAniListId(item);
-      if (anilistId) {
-        item.anilistId = anilistId;
-        console.log(`Found AniList ID: ${anilistId} for ${item.name}`);
-      }
-    }
-    
     // Load seasons/episodes using TMDB data
     await loadTVSeasons(item); 
   } 
@@ -261,6 +301,20 @@ async function loadEpisodes() {
   const seasonNumber = document.getElementById('season-select').value; 
   const episodeSelect = document.getElementById('episode-select'); 
   const seasonsContainer = document.getElementById('seasons-container');
+  
+  // For anime, get AniList ID for this specific season
+  const isAnime = currentItem.original_language === 'ja' && currentItem.genre_ids && currentItem.genre_ids.includes(16);
+  if (isAnime) {
+    console.log(`Fetching AniList ID for season ${seasonNumber}...`);
+    const anilistId = await getAniListIdForSeason(currentItem, parseInt(seasonNumber));
+    if (anilistId) {
+      // Store the AniList ID for this season
+      currentItem[`anilistId_season_${seasonNumber}`] = anilistId;
+      console.log(`Found AniList ID: ${anilistId} for ${currentItem.name} Season ${seasonNumber}`);
+    } else {
+      console.log(`No AniList ID found for ${currentItem.name} Season ${seasonNumber}, will use TMDB fallback`);
+    }
+  }
    
   try { 
     // Check if we have cached season data first
@@ -344,17 +398,21 @@ function loadPlayer() {
     const season = seasonSelect ? seasonSelect.value : 1; 
     const episode = episodeSelect ? episodeSelect.value : 1; 
      
-    // Check if it's anime and we have AniList ID
-    if (isAnime && currentItem.anilistId) { 
-      // Use AniList ID for anime playback - modify URL structure as needed
-      const embedURL = `https://vidsrc.cc/v2/embed/anime/ani${currentItem.anilistId}/${episode}/sub?autoPlay=false`; 
-      document.getElementById('modal-video').src = embedURL; 
-      console.log(`Loading anime with AniList ID: ${currentItem.anilistId}, Episode: ${episode}`);
-    } else if (isAnime) {
-      // Fallback to TMDB ID for anime if no AniList ID found
-      const embedURL = `https://vidsrc.cc/v2/embed/anime/${currentItem.id}/${episode}/sub?autoPlay=false`; 
-      document.getElementById('modal-video').src = embedURL; 
-      console.log(`Loading anime with TMDB ID: ${currentItem.id}, Episode: ${episode}`);
+    // Check if it's anime and we have AniList ID for this season
+    if (isAnime) {
+      const seasonAniListId = currentItem[`anilistId_season_${season}`];
+      
+      if (seasonAniListId) {
+        // Use AniList ID for this specific season
+        const embedURL = `https://vidsrc.cc/v2/embed/anime/ani${seasonAniListId}/${episode}/sub?autoPlay=false`; 
+        document.getElementById('modal-video').src = embedURL; 
+        console.log(`Loading anime with AniList ID: ${seasonAniListId}, Episode: ${episode}`);
+      } else {
+        // Fallback to TMDB ID for anime
+        const embedURL = `https://vidsrc.cc/v2/embed/anime/${currentItem.id}/${episode}/sub?autoPlay=false`; 
+        document.getElementById('modal-video').src = embedURL; 
+        console.log(`Loading anime with TMDB ID: ${currentItem.id}, Episode: ${episode}`);
+      }
     } else { 
       // Regular TV show endpoint 
       const embedURL = `https://vidsrc.cc/v2/embed/tv/${currentItem.id}/${season}/${episode}?autoPlay=false&poster=false`; 
