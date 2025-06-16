@@ -2,13 +2,16 @@ const API_KEY = 'fc5229ddcee9e96a1be1b8f8535063a3';
 const BASE_URL = 'https://api.themoviedb.org/3'; 
 const IMG_URL = 'https://image.tmdb.org/t/p/original'; 
 let currentItem; 
- 
+
+// AniList GraphQL endpoint
+const ANILIST_URL = 'https://graphql.anilist.co';
+
 async function fetchTrending(type) { 
   const res = await fetch(`${BASE_URL}/trending/${type}/week?api_key=${API_KEY}`); 
   const data = await res.json(); 
   return data.results; 
 } 
- 
+
 async function fetchTrendingAnime() { 
   let allResults = []; 
  
@@ -24,11 +27,114 @@ async function fetchTrendingAnime() {
  
   return allResults; 
 } 
- 
+
 async function fetchTVDetails(id) { 
   const res = await fetch(`${BASE_URL}/tv/${id}?api_key=${API_KEY}`); 
   const data = await res.json(); 
   return data; 
+}
+
+// Function to get AniList ID from TMDB data
+async function getAniListId(tmdbItem) {
+  const query = `
+    query ($search: String) {
+      Media (search: $search, type: ANIME) {
+        id
+        title {
+          romaji
+          english
+          native
+        }
+        startDate {
+          year
+        }
+        episodes
+        status
+      }
+    }
+  `;
+
+  const variables = {
+    search: tmdbItem.name || tmdbItem.title
+  };
+
+  try {
+    const response = await fetch(ANILIST_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: query,
+        variables: variables
+      })
+    });
+
+    const data = await response.json();
+    
+    if (data.data && data.data.Media) {
+      // Store AniList ID for later use
+      return data.data.Media.id;
+    }
+    
+    return null;
+  } catch (error) {
+    console.warn('Error fetching AniList ID:', error);
+    return null;
+  }
+}
+
+// Enhanced function to get AniList episode data
+async function getAniListEpisodeData(anilistId) {
+  const query = `
+    query ($id: Int) {
+      Media (id: $id, type: ANIME) {
+        id
+        episodes
+        title {
+          romaji
+          english
+          native
+        }
+        airingSchedule {
+          nodes {
+            episode
+            airingAt
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    id: anilistId
+  };
+
+  try {
+    const response = await fetch(ANILIST_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: query,
+        variables: variables
+      })
+    });
+
+    const data = await response.json();
+    
+    if (data.data && data.data.Media) {
+      return data.data.Media;
+    }
+    
+    return null;
+  } catch (error) {
+    console.warn('Error fetching AniList episode data:', error);
+    return null;
+  }
 }
 
 // Enhanced function to get seasons only from the "Seasons" episode group
@@ -142,12 +248,23 @@ async function showDetails(item) {
   // Determine content type properly 
   const isMovie = item.media_type === 'movie' || (!item.media_type && item.release_date); 
   const isTVShow = item.media_type === 'tv' || (!item.media_type && item.first_air_date); 
+  const isAnime = item.original_language === 'ja' && item.genre_ids && item.genre_ids.includes(16);
    
   if (isMovie) { 
     // For movies, load player directly 
     loadPlayer(); 
   } else if (isTVShow) { 
-    // For TV shows and anime, load seasons/episodes with enhanced detection
+    // For TV shows and anime, fetch AniList ID if it's anime
+    if (isAnime) {
+      // Try to get AniList ID for anime
+      const anilistId = await getAniListId(item);
+      if (anilistId) {
+        item.anilistId = anilistId;
+        console.log(`Found AniList ID: ${anilistId} for ${item.name}`);
+      }
+    }
+    
+    // Load seasons/episodes with enhanced detection
     await loadTVSeasons(item); 
   } 
    
@@ -156,8 +273,35 @@ async function showDetails(item) {
  
 async function loadTVSeasons(item) { 
   try { 
-    // Use enhanced season detection
-    const allSeasons = await fetchAllSeasons(item.id);
+    const isAnime = item.original_language === 'ja' && item.genre_ids && item.genre_ids.includes(16);
+    let allSeasons = [];
+    
+    // For anime with AniList ID, try to get episode data from AniList
+    if (isAnime && item.anilistId) {
+      const anilistData = await getAniListEpisodeData(item.anilistId);
+      if (anilistData && anilistData.episodes) {
+        // Create a single season for anime (most anime are single season)
+        allSeasons = [{
+          season_number: 1,
+          name: 'Season 1',
+          episode_count: anilistData.episodes,
+          air_date: null,
+          poster_path: null,
+          overview: 'Season 1',
+          id: 'anilist_1',
+          episodes: Array.from({length: anilistData.episodes}, (_, i) => ({
+            episode_number: i + 1,
+            name: `Episode ${i + 1}`,
+            air_date: null
+          }))
+        }];
+      }
+    }
+    
+    // If no AniList data or not anime, use TMDB data
+    if (allSeasons.length === 0) {
+      allSeasons = await fetchAllSeasons(item.id);
+    }
      
     if (allSeasons.length === 0) { 
       // If no seasons found, just load the player 
@@ -277,6 +421,7 @@ async function loadEpisodes() {
 function loadPlayer() { 
   // Determine if it's a movie or TV show 
   const isMovie = currentItem.media_type === 'movie' || (!currentItem.media_type && currentItem.release_date); 
+  const isAnime = currentItem.original_language === 'ja' && currentItem.genre_ids && currentItem.genre_ids.includes(16);
    
   if (isMovie) { 
     // Movie player 
@@ -290,11 +435,17 @@ function loadPlayer() {
     const season = seasonSelect ? seasonSelect.value : 1; 
     const episode = episodeSelect ? episodeSelect.value : 1; 
      
-    // Check if it's anime (Japanese language) - use sub only 
-    if (currentItem.original_language === 'ja' && currentItem.genre_ids && currentItem.genre_ids.includes(16)) { 
-      // Use anime endpoint for Japanese anime content with sub only 
+    // Check if it's anime and we have AniList ID
+    if (isAnime && currentItem.anilistId) { 
+      // Use AniList ID for anime playback - modify URL structure as needed
+      const embedURL = `https://vidsrc.cc/v2/embed/anime/${currentItem.anilistId}/${episode}/sub?autoPlay=false`; 
+      document.getElementById('modal-video').src = embedURL; 
+      console.log(`Loading anime with AniList ID: ${currentItem.anilistId}, Episode: ${episode}`);
+    } else if (isAnime) {
+      // Fallback to TMDB ID for anime if no AniList ID found
       const embedURL = `https://vidsrc.cc/v2/embed/anime/tmdb${currentItem.id}/${episode}/sub?autoPlay=false`; 
       document.getElementById('modal-video').src = embedURL; 
+      console.log(`Loading anime with TMDB ID: ${currentItem.id}, Episode: ${episode}`);
     } else { 
       // Regular TV show endpoint 
       const embedURL = `https://vidsrc.cc/v3/embed/tv/${currentItem.id}/${season}/${episode}?autoPlay=false&poster=false`; 
