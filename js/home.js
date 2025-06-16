@@ -34,22 +34,12 @@ async function fetchTVDetails(id) {
   return data; 
 }
 
-// Function to get AniList ID from TMDB data
+// Simple function to get just the AniList ID
 async function getAniListId(tmdbItem) {
   const query = `
     query ($search: String) {
       Media (search: $search, type: ANIME) {
         id
-        title {
-          romaji
-          english
-          native
-        }
-        startDate {
-          year
-        }
-        episodes
-        status
       }
     }
   `;
@@ -74,65 +64,12 @@ async function getAniListId(tmdbItem) {
     const data = await response.json();
     
     if (data.data && data.data.Media) {
-      // Store AniList ID for later use
       return data.data.Media.id;
     }
     
     return null;
   } catch (error) {
     console.warn('Error fetching AniList ID:', error);
-    return null;
-  }
-}
-
-// Enhanced function to get AniList episode data
-async function getAniListEpisodeData(anilistId) {
-  const query = `
-    query ($id: Int) {
-      Media (id: $id, type: ANIME) {
-        id
-        episodes
-        title {
-          romaji
-          english
-          native
-        }
-        airingSchedule {
-          nodes {
-            episode
-            airingAt
-          }
-        }
-      }
-    }
-  `;
-
-  const variables = {
-    id: anilistId
-  };
-
-  try {
-    const response = await fetch(ANILIST_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        query: query,
-        variables: variables
-      })
-    });
-
-    const data = await response.json();
-    
-    if (data.data && data.data.Media) {
-      return data.data.Media;
-    }
-    
-    return null;
-  } catch (error) {
-    console.warn('Error fetching AniList episode data:', error);
     return null;
   }
 }
@@ -254,9 +191,8 @@ async function showDetails(item) {
     // For movies, load player directly 
     loadPlayer(); 
   } else if (isTVShow) { 
-    // For TV shows and anime, fetch AniList ID if it's anime
+    // For anime, just get the AniList ID for playing
     if (isAnime) {
-      // Try to get AniList ID for anime
       const anilistId = await getAniListId(item);
       if (anilistId) {
         item.anilistId = anilistId;
@@ -264,7 +200,7 @@ async function showDetails(item) {
       }
     }
     
-    // Load seasons/episodes with enhanced detection
+    // Load seasons/episodes using TMDB data
     await loadTVSeasons(item); 
   } 
    
@@ -273,35 +209,8 @@ async function showDetails(item) {
  
 async function loadTVSeasons(item) { 
   try { 
-    const isAnime = item.original_language === 'ja' && item.genre_ids && item.genre_ids.includes(16);
-    let allSeasons = [];
-    
-    // For anime with AniList ID, try to get episode data from AniList
-    if (isAnime && item.anilistId) {
-      const anilistData = await getAniListEpisodeData(item.anilistId);
-      if (anilistData && anilistData.episodes) {
-        // Create a single season for anime (most anime are single season)
-        allSeasons = [{
-          season_number: 1,
-          name: 'Season 1',
-          episode_count: anilistData.episodes,
-          air_date: null,
-          poster_path: null,
-          overview: 'Season 1',
-          id: 'anilist_1',
-          episodes: Array.from({length: anilistData.episodes}, (_, i) => ({
-            episode_number: i + 1,
-            name: `Episode ${i + 1}`,
-            air_date: null
-          }))
-        }];
-      }
-    }
-    
-    // If no AniList data or not anime, use TMDB data
-    if (allSeasons.length === 0) {
-      allSeasons = await fetchAllSeasons(item.id);
-    }
+    // Use TMDB data for all season/episode information
+    const allSeasons = await fetchAllSeasons(item.id);
      
     if (allSeasons.length === 0) { 
       // If no seasons found, just load the player 
