@@ -590,5 +590,3 @@ async function init() {
 } 
  
 init();
-
-The thumbnail and description must change according to their season, Don't destroy code
