@@ -2,8 +2,7 @@ const API_KEY = 'fc5229ddcee9e96a1be1b8f8535063a3';
 const BASE_URL = 'https://api.themoviedb.org/3'; 
 const IMG_URL = 'https://image.tmdb.org/t/p/original'; 
 const ANILIST_URL = 'https://graphql.anilist.co';
-let currentItem;
-let currentSeasonData = {}; // Store season data for quick access
+let currentItem; 
  
 async function fetchTrending(type) { 
   const res = await fetch(`${BASE_URL}/trending/${type}/week?api_key=${API_KEY}`); 
@@ -168,12 +167,6 @@ async function fetchTVDetails(id) {
   return data; 
 } 
 
-async function fetchSeasonDetails(tvId, seasonNumber) {
-  const res = await fetch(`${BASE_URL}/tv/${tvId}/season/${seasonNumber}?api_key=${API_KEY}`);
-  const data = await res.json();
-  return data;
-}
-
 async function fetchAnimeDetails(id) {
   const query = `
     query ($id: Int) {
@@ -254,25 +247,10 @@ function displayList(items, containerId) {
     img.onclick = () => showDetails(item); 
     container.appendChild(img); 
   }); 
-}
-
-function updateModalContent(title, description, posterUrl, backdropUrl) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-description').textContent = description;
-  document.getElementById('modal-image').src = posterUrl;
-  
-  // Update backdrop if available
-  if (backdropUrl) {
-    const modalContent = document.querySelector('.modal-content');
-    modalContent.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url(${backdropUrl})`;
-    modalContent.style.backgroundSize = 'cover';
-    modalContent.style.backgroundPosition = 'center';
-  }
-}
+} 
  
 async function showDetails(item) { 
   currentItem = item; 
-  currentSeasonData = {}; // Reset season data
    
   // Clean up any existing season/episode selectors first 
   const existingContainer = document.getElementById('seasons-container'); 
@@ -280,17 +258,14 @@ async function showDetails(item) {
     existingContainer.remove(); 
   } 
    
-  // Set initial content
-  const initialTitle = item.title || item.name;
-  const initialDescription = item.overview;
-  const initialPosterUrl = item.poster_path ? 
+  document.getElementById('modal-title').textContent = item.title || item.name; 
+  document.getElementById('modal-description').textContent = item.overview; 
+  
+  // Handle different image URL formats
+  const posterUrl = item.poster_path ? 
     (item.poster_path.startsWith('http') ? item.poster_path : `${IMG_URL}${item.poster_path}`) :
     'https://via.placeholder.com/300x450?text=No+Image';
-  const initialBackdropUrl = item.backdrop_path ? 
-    (item.backdrop_path.startsWith('http') ? item.backdrop_path : `${IMG_URL}${item.backdrop_path}`) :
-    (item.bannerImage || '');
-
-  updateModalContent(initialTitle, initialDescription, initialPosterUrl, initialBackdropUrl);
+  document.getElementById('modal-image').src = posterUrl;
   
   document.getElementById('modal-rating').innerHTML = '★'.repeat(Math.round(item.vote_average / 2)); 
    
@@ -339,7 +314,7 @@ async function loadAnimeEpisodes(item) {
       <div class="seasons-episodes">
         <div class="episode-selector">
           <label>Episode: </label>
-          <select id="episode-select" onchange="updateAnimeEpisodeContent()">
+          <select id="episode-select" onchange="loadPlayer()">
             ${episodeOptions}
           </select>
         </div>
@@ -351,7 +326,7 @@ async function loadAnimeEpisodes(item) {
     videoContainer.parentNode.insertBefore(container, videoContainer);
     
     // Load first episode by default
-    updateAnimeEpisodeContent();
+    loadPlayer();
     
   } catch (error) {
     console.error('Error loading anime episodes:', error);
@@ -373,7 +348,7 @@ function createDefaultAnimeEpisodes(episodeCount) {
     <div class="seasons-episodes">
       <div class="episode-selector">
         <label>Episode: </label>
-        <select id="episode-select" onchange="updateAnimeEpisodeContent()">
+        <select id="episode-select" onchange="loadPlayer()">
           ${episodeOptions}
         </select>
       </div>
@@ -382,21 +357,6 @@ function createDefaultAnimeEpisodes(episodeCount) {
   
   const videoContainer = document.querySelector('.modal-video-container');
   videoContainer.parentNode.insertBefore(container, videoContainer);
-}
-
-function updateAnimeEpisodeContent() {
-  const episodeSelect = document.getElementById('episode-select');
-  const episodeNumber = episodeSelect ? episodeSelect.value : 1;
-  
-  // For anime, we'll keep the original title and description since episode-specific data isn't readily available
-  // But we could enhance this by fetching episode details if needed
-  const episodeTitle = `${currentItem.title || currentItem.name} - Episode ${episodeNumber}`;
-  
-  // Update modal with episode-specific title while keeping original description
-  document.getElementById('modal-title').textContent = episodeTitle;
-  
-  // Load the player for the selected episode
-  loadPlayer();
 }
  
 async function loadTVSeasons(item) { 
@@ -427,7 +387,7 @@ async function loadTVSeasons(item) {
         </div> 
         <div class="episode-selector"> 
           <label>Episode: </label> 
-          <select id="episode-select" onchange="updateEpisodeContent()"> 
+          <select id="episode-select" onchange="loadPlayer()"> 
             <option value="1">Episode 1</option> 
           </select> 
         </div> 
@@ -453,8 +413,8 @@ async function loadEpisodes() {
   const episodeSelect = document.getElementById('episode-select'); 
    
   try { 
-    const seasonData = await fetchSeasonDetails(currentItem.id, seasonNumber);
-    currentSeasonData[seasonNumber] = seasonData; // Store season data
+    const res = await fetch(`${BASE_URL}/tv/${currentItem.id}/season/${seasonNumber}?api_key=${API_KEY}`); 
+    const seasonData = await res.json(); 
      
     if (seasonData.episodes && seasonData.episodes.length > 0) { 
       episodeSelect.innerHTML = ''; 
@@ -476,8 +436,8 @@ async function loadEpisodes() {
       } 
     } 
      
-    // Update content for first episode of the season
-    updateEpisodeContent(); 
+    // Load first episode by default 
+    loadPlayer(); 
      
   } catch (error) { 
     console.error('Error loading episodes:', error); 
@@ -489,67 +449,9 @@ async function loadEpisodes() {
       option.textContent = `Episode ${i}`; 
       episodeSelect.appendChild(option); 
     } 
-    updateEpisodeContent();
+    loadPlayer(); 
   } 
-}
-
-function updateEpisodeContent() {
-  const seasonSelect = document.getElementById('season-select');
-  const episodeSelect = document.getElementById('episode-select');
-  
-  if (!seasonSelect || !episodeSelect) return;
-  
-  const seasonNumber = seasonSelect.value;
-  const episodeNumber = episodeSelect.value;
-  
-  // Get season data
-  const seasonData = currentSeasonData[seasonNumber];
-  
-  if (seasonData && seasonData.episodes) {
-    // Find the specific episode
-    const episode = seasonData.episodes.find(ep => ep.episode_number == episodeNumber);
-    
-    if (episode) {
-      // Update modal content with episode-specific information
-      const episodeTitle = `${currentItem.title || currentItem.name} - S${seasonNumber}E${episodeNumber}${episode.name ? ': ' + episode.name : ''}`;
-      const episodeDescription = episode.overview || currentItem.overview || 'No description available';
-      const episodePoster = episode.still_path ? `${IMG_URL}${episode.still_path}` : 
-        (currentItem.poster_path ? 
-          (currentItem.poster_path.startsWith('http') ? currentItem.poster_path : `${IMG_URL}${currentItem.poster_path}`) :
-          'https://via.placeholder.com/300x450?text=No+Image');
-      
-      // Use episode still as backdrop if available, otherwise use original backdrop
-      const episodeBackdrop = episode.still_path ? `${IMG_URL}${episode.still_path}` :
-        (currentItem.backdrop_path ? 
-          (currentItem.backdrop_path.startsWith('http') ? currentItem.backdrop_path : `${IMG_URL}${currentItem.backdrop_path}`) :
-          '');
-      
-      updateModalContent(episodeTitle, episodeDescription, episodePoster, episodeBackdrop);
-    } else {
-      // Fallback to season/show info
-      const seasonTitle = `${currentItem.title || currentItem.name} - Season ${seasonNumber} Episode ${episodeNumber}`;
-      const seasonDescription = seasonData.overview || currentItem.overview || 'No description available';
-      const seasonPoster = seasonData.poster_path ? `${IMG_URL}${seasonData.poster_path}` :
-        (currentItem.poster_path ? 
-          (currentItem.poster_path.startsWith('http') ? currentItem.poster_path : `${IMG_URL}${currentItem.poster_path}`) :
-          'https://via.placeholder.com/300x450?text=No+Image');
-      
-      updateModalContent(seasonTitle, seasonDescription, seasonPoster, null);
-    }
-  } else {
-    // No season data available, use basic formatting
-    const basicTitle = `${currentItem.title || currentItem.name} - S${seasonNumber}E${episodeNumber}`;
-    const basicDescription = currentItem.overview || 'No description available';
-    const basicPoster = currentItem.poster_path ? 
-      (currentItem.poster_path.startsWith('http') ? currentItem.poster_path : `${IMG_URL}${currentItem.poster_path}`) :
-      'https://via.placeholder.com/300x450?text=No+Image';
-    
-    updateModalContent(basicTitle, basicDescription, basicPoster, null);
-  }
-  
-  // Load the player for the selected episode
-  loadPlayer();
-}
+} 
  
 function loadPlayer() { 
   // Determine if it's a movie, TV show, or anime
@@ -586,18 +488,11 @@ function closeModal() {
   document.getElementById('modal').style.display = 'none'; 
   document.getElementById('modal-video').src = ''; 
    
-  // Clean up seasons container and reset modal styling
+  // Clean up seasons container 
   const seasonsContainer = document.getElementById('seasons-container'); 
   if (seasonsContainer) { 
     seasonsContainer.remove(); 
-  }
-  
-  // Reset modal background
-  const modalContent = document.querySelector('.modal-content');
-  modalContent.style.backgroundImage = '';
-  
-  // Reset season data
-  currentSeasonData = {};
+  } 
 } 
  
 // Listen for player events 
@@ -695,3 +590,5 @@ async function init() {
 } 
  
 init();
+
+The thumbnail and description must change according to their season, Don't destroy code
