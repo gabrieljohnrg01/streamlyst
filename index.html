@@ -746,28 +746,7 @@
             try {
                 const response = await fetch(`${CONFIG.TMDB_BASE_URL}/trending/all/week?api_key=${CONFIG.TMDB_API_KEY}`);
                 const data = await response.json();
-                // Filter out anime content (typically has specific genres or keywords)
-                const filteredResults = data.results.filter(item => {
-                    // Filter out content that might be anime
-                    const title = (item.title || item.name || '').toLowerCase();
-                    const overview = (item.overview || '').toLowerCase();
-                    
-                    // Common anime indicators
-                    const animeKeywords = ['anime', 'manga', 'japanese animation', 'studio ghibli'];
-                    const hasAnimeKeywords = animeKeywords.some(keyword => 
-                        title.includes(keyword) || overview.includes(keyword)
-                    );
-                    
-                    // Filter out if it has anime keywords or is from Japan with animation genre
-                    return !hasAnimeKeywords && !(
-                        item.origin_country && 
-                        item.origin_country.includes('JP') && 
-                        item.genre_ids && 
-                        item.genre_ids.includes(16) // Animation genre ID
-                    );
-                });
-                
-                displayContent(filteredResults);
+                displayContent(data.results);
             } catch (error) {
                 console.error('Error loading trending content:', error);
                 showError('Failed to load trending content');
@@ -779,24 +758,30 @@
             try {
                 const response = await fetch(`${CONFIG.TMDB_BASE_URL}/movie/popular?api_key=${CONFIG.TMDB_API_KEY}`);
                 const data = await response.json();
-                displayContent(data.results, 'movie');
+                // Filter out anime content from the TMDB results
+                const filteredMovies = data.results.filter(item => item.media_type !== 'anime');
+                displayContent(filteredMovies, 'movie');
             } catch (error) {
                 console.error('Error loading movies:', error);
                 showError('Failed to load movies');
             }
         }
 
+
         async function loadTVShows() {
-            showLoading();
-            try {
-                const response = await fetch(`${CONFIG.TMDB_BASE_URL}/tv/popular?api_key=${CONFIG.TMDB_API_KEY}`);
-                const data = await response.json();
-                displayContent(data.results, 'tv');
-            } catch (error) {
-                console.error('Error loading TV shows:', error);
-                showError('Failed to load TV shows');
-            }
-        }
+          showLoading();
+          try {
+              const response = await fetch(`${CONFIG.TMDB_BASE_URL}/tv/popular?api_key=${CONFIG.TMDB_API_KEY}`);
+              const data = await response.json();
+              // Filter out anime content from the TMDB results
+              const filteredTVShows = data.results.filter(item => item.media_type !== 'anime');
+              displayContent(filteredTVShows, 'tv');
+          } catch (error) {
+              console.error('Error loading TV shows:', error);
+              showError('Failed to load TV shows');
+          }
+      }
+
 
         async function loadAnime() {
             showLoading();
@@ -1034,7 +1019,7 @@
                 
                 data.seasons.forEach((season, index) => {
                     if (season.season_number > 0) {
-                        html += `<button class="season-btn ${index === 0 ? 'active' : ''}" onclick="loadSeason(${tvId}, ${season.season_number})">
+                        html += `<button class="season-btn ${index === 0 ? 'active' : ''}" onclick="loadSeason(${tvId}, ${season.season_number}, event)">
                             Season ${season.season_number}
                         </button>`;
                     }
@@ -1047,7 +1032,7 @@
                     if (data.seasons.length > 0) {
                         const firstSeason = data.seasons.find(s => s.season_number > 0);
                         if (firstSeason) {
-                            loadSeason(tvId, firstSeason.season_number);
+                            loadSeason(tvId, firstSeason.season_number, null);
                         }
                     }
                 }, 100);
@@ -1059,16 +1044,17 @@
             }
         }
 
-        async function loadSeason(tvId, seasonNumber) {
+
+        async function loadSeason(tvId, seasonNumber, event) {
             try {
                 const response = await fetch(`${CONFIG.TMDB_BASE_URL}/tv/${tvId}/season/${seasonNumber}?api_key=${CONFIG.TMDB_API_KEY}`);
                 const data = await response.json();
                 
-                const container = document.getElementById('episodesContainer');
-                
                 // Update active season button
                 document.querySelectorAll('.season-btn').forEach(btn => btn.classList.remove('active'));
-                event.target.classList.add('active');
+                if (event) {
+                    event.target.classList.add('active');
+                }
                 
                 let html = '<div class="episodes-grid">';
                 
@@ -1088,12 +1074,13 @@
                 });
                 
                 html += '</div>';
-                container.innerHTML = html;
+                document.getElementById('episodesContainer').innerHTML = html;
             } catch (error) {
                 console.error('Error loading season:', error);
                 document.getElementById('episodesContainer').innerHTML = '<p>Failed to load episodes</p>';
             }
         }
+
 
         function loadAnimeEpisodes(anime) {
             if (!anime.episodes || anime.episodes === 0) {
