@@ -33,6 +33,16 @@
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
         }
+        .top-number {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 3rem;
+            font-weight: bold;
+            color: rgba(255,255,255,0.2);
+            line-height: 1;
+            z-index: 1;
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -135,11 +145,11 @@
             </button>
             <div class="relative">
                 <div class="h-96 w-full bg-gradient-to-r from-primary to-secondary relative">
-                    <img id="detailsBackdrop" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/dc26396a-52b7-4370-92a0-0594b9aca228.png" alt="Movie or show backdrop" 
+                    <img id="detailsBackdrop" src="https://placehold.co/1280x720" alt="Movie or show backdrop" 
                         class="w-full h-full object-cover opacity-40" />
                     <div class="absolute inset-0 flex items-end p-8 backdrop-blur-sm">
                         <div class="flex space-x-6">
-                            <img id="detailsPoster" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7fa9e668-7e06-4d22-a74c-1aaf4e54499e.png" alt="Movie or show poster" 
+                            <img id="detailsPoster" src="https://placehold.co/300x450" alt="Movie or show poster" 
                                 class="w-48 h-64 object-cover rounded shadow-lg" />
                             <div>
                                 <h1 id="detailsTitle" class="text-3xl font-bold mb-2"></h1>
@@ -213,7 +223,7 @@
                 <div id="userMenu" class="hidden items-center space-x-2">
                     <div class="relative">
                         <button id="menuToggle" class="flex items-center space-x-2">
-                            <img id="userAvatar" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/90e331c7-a1cf-4a4c-8fe6-96b0388b535d.png" alt="User profile picture" 
+                            <img id="userAvatar" src="https://placehold.co/40x40" alt="User profile picture" 
                                 class="w-8 h-8 rounded-full object-cover" />
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
@@ -263,7 +273,7 @@
             <section id="home" class="section fade-in">
                 <div class="mb-8">
                     <div class="h-[70vh] relative rounded-xl overflow-hidden">
-                        <img id="heroImage" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/bf232faf-2ee2-44fd-8ecd-725e96d27e21.png" alt="Popular movie or TV show on StreamLyst"
+                        <img id="heroImage" src="https://placehold.co/1920x1080" alt="Popular movie or TV show on StreamLyst"
                             class="w-full h-full object-cover" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex items-end p-8">
                             <div class="max-w-3xl">
@@ -305,7 +315,7 @@
 
             <!-- Movies Section -->
             <section id="movies" class="section hidden">
-                <h1 class="text-3xl font-bold mb-8">Movies</h1>
+                <h1 class="text-3xl font-bold mb-8">Top Movies</h1>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                     <!-- Movies will be loaded here -->
                 </div>
@@ -313,7 +323,7 @@
 
             <!-- TV Shows Section -->
             <section id="tv" class="section hidden">
-                <h1 class="text-3xl font-bold mb-8">TV Shows</h1>
+                <h1 class="text-3xl font-bold mb-8">Top TV Shows</h1>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                     <!-- TV Shows will be loaded here -->
                 </div>
@@ -321,7 +331,7 @@
 
             <!-- Anime Section -->
             <section id="anime" class="section hidden">
-                <h1 class="text-3xl font-bold mb-8">Anime</h1>
+                <h1 class="text-3xl font-bold mb-8">Top Anime</h1>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                     <!-- Anime will be loaded here -->
                 </div>
@@ -343,7 +353,7 @@
                 <h1 class="text-3xl font-bold mb-6">Profile</h1>
                 <div class="bg-primary/20 rounded-xl p-6 max-w-3xl">
                     <div class="flex items-start space-x-6">
-                        <img id="profileAvatar" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c1820e0e-8731-489c-9cb6-9f3e9ebe9bea.png" 
+                        <img id="profileAvatar" src="https://placehold.co/120x120" 
                             alt="User profile picture" 
                             class="w-24 h-24 rounded-full border-2 border-accent object-cover" />
                         <div class="flex-1">
@@ -411,15 +421,18 @@
     </footer>
 
     <script>
-        // Supabase Configuration
-        const supabaseUrl = 'YOUR_SUPABASE_URL';
-        const supabaseKey = 'YOUR_SUPABASE_KEY';
+        // Supabase Configuration (replace with your actual credentials)
+        const supabaseUrl = 'https://fxjfjuuewhecnyvpdwtc.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4amZqdXVld2hlY255dnBkd3RjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEwODc4NjAsImV4cCI6MjA2NjY2Mzg2MH0.Znwtrg4_srPFF6DV8beEE1Mvvi5RoyUzqYr1QaCnghQ';
         
         // Initialize Supabase
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
         
         // TMDB API Key
-        const tmdbApiKey = 'YOUR_TMDB_API_KEY';
+        const tmdbApiKey = 'fc5229ddcee9e96a1be1b8f8535063a3';
+        
+        // AniList GraphQL endpoint
+        const anilistEndpoint = 'https://graphql.anilist.co';
         
         // Current User
         let currentUser = null;
@@ -504,9 +517,7 @@
         // Initialize the app
         document.addEventListener('DOMContentLoaded', async () => {
             checkAuthState();
-            loadFeaturedContent();
-            
-            // Setup event listeners
+            await loadFeaturedContent();
             setupEventListeners();
         });
         
@@ -670,6 +681,11 @@
                     playEpisode(currentEpisodeIndex + 1);
                 }
             });
+
+            // Watchlist button
+            watchlistBtn.addEventListener('click', () => {
+                toggleWatchlist(currentMediaId, currentMediaType);
+            });
         }
         
         async function checkAuthState() {
@@ -711,7 +727,8 @@
             } else {
                 authButtons.classList.remove('hidden');
                 mobileAuthButtons.classList.remove('hidden');
-                UserMenu.classList.add('hidden');
+                userMenu.classList.add('hidden');
+                mobileUserMenu.classList.add('hidden');
             }
         }
 
@@ -739,11 +756,11 @@
 
             // Load content for the section if empty
             if (sectionId === 'movies' && document.getElementById('movies').children.length === 1) {
-                loadMovies();
+                loadTopMovies();
             } else if (sectionId === 'tv' && document.getElementById('tv').children.length === 1) {
-                loadTVShows();
+                loadTopTVShows();
             } else if (sectionId === 'anime' && document.getElementById('anime').children.length === 1) {
-                loadAnime();
+                loadTopAnime();
             } else if (sectionId === 'watchlist' && currentUser) {
                 loadWatchlist();
             } else if (sectionId === 'profile' && currentUser) {
@@ -756,33 +773,39 @@
                 // Load trending movies
                 const trendingMoviesRes = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${tmdbApiKey}`);
                 const trendingMoviesData = await trendingMoviesRes.json();
-                renderMediaCards(trendingMoviesData.results.slice(0, 10), trendingMovies, 'movie');
+                renderNumberedMediaCards(trendingMoviesData.results.slice(0, 10), trendingMovies, 'movie');
 
                 // Load popular TV shows
                 const popularTvRes = await fetch(`https://api.themoviedb.org/3/tv/popular?api_key=${tmdbApiKey}`);
                 const popularTvData = await popularTvRes.json();
-                renderMediaCards(popularTvData.results.slice(0, 10), popularTv, 'tv');
+                renderNumberedMediaCards(popularTvData.results.slice(0, 10), popularTv, 'tv');
 
-                // Load trending anime
-                const animeRes = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${tmdbApiKey}&with_genres=16`);
-                const animeData = await animeRes.json();
-                renderMediaCards(animeData.results.slice(0, 10), trendingAnime, 'anime');
+                // Load trending anime from AniList
+                const topAnime = await fetchTopAnime(10);
+                if (topAnime) {
+                    renderNumberedMediaCards(topAnime, trendingAnime, 'anime');
+                } else {
+                    // Fallback to TMDB if AniList fails
+                    const animeRes = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${tmdbApiKey}&with_genres=16`);
+                    const animeData = await animeRes.json();
+                    renderNumberedMediaCards(animeData.results.slice(0, 10), trendingAnime, 'tv');
+                }
 
                 // Set hero content to first trending movie
                 if (trendingMoviesData.results.length > 0) {
                     const heroMedia = trendingMoviesData.results[0];
                     heroTitle.textContent = heroMedia.title;
-                    heroDescription.textContent = heroMedia.overview;
+                    heroDescription.textContent = heroMedia.overview || 'No description available';
                     heroImage.src = heroMedia.backdrop_path 
                         ? `https://image.tmdb.org/t/p/original${heroMedia.backdrop_path}`
-                        : 'https://placehold.co/1920x1080?text=No+Backdrop';
-                    heroImage.alt = heroMedia.title;
+                        : 'https://placehold.co/1920x1080';
+                    heroImage.alt = `${heroMedia.title} backdrop`;
 
                     // Add event listeners to hero buttons
                     const heroWatchBtn = heroImage.closest('.relative').querySelector('button:first-child');
                     const heroWatchlistBtn = heroImage.closest('.relative').querySelector('button:last-child');
 
-                    heroWatchBtn.onclick = () => openDetailsModal(heroMedia.id, 'movie');
+                    heroWatchBtn.onclick = () => playMedia(heroMedia.id, 'movie');
                     heroWatchlistBtn.onclick = () => toggleWatchlist(heroMedia.id, 'movie');
                 }
             } catch (error) {
@@ -790,62 +813,95 @@
             }
         }
 
-        async function loadMovies() {
+        async function loadTopMovies() {
             try {
-                const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${tmdbApiKey}&sort_by=popularity.desc`);
+                const response = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${tmdbApiKey}`);
                 const data = await response.json();
-                renderMediaCards(data.results, document.getElementById('movies').querySelector('div'), 'movie');
+                renderNumberedMediaCards(data.results.slice(0, 10), document.getElementById('movies').querySelector('div'), 'movie');
             } catch (error) {
-                console.error('Error loading movies:', error);
+                console.error('Error loading top movies:', error);
             }
         }
 
-        async function loadTVShows() {
+        async function loadTopTVShows() {
             try {
-                const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${tmdbApiKey}&sort_by=popularity.desc`);
+                const response = await fetch(`https://api.themoviedb.org/3/tv/top_rated?api_key=${tmdbApiKey}`);
                 const data = await response.json();
-                renderMediaCards(data.results, document.getElementById('tv').querySelector('div'), 'tv');
+                renderNumberedMediaCards(data.results.slice(0, 10), document.getElementById('tv').querySelector('div'), 'tv');
             } catch (error) {
-                console.error('Error loading TV shows:', error);
+                console.error('Error loading top TV shows:', error);
             }
         }
 
-        async function loadAnime() {
+        async function loadTopAnime() {
             try {
-                // TMDB anime (animation genre)
-                const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${tmdbApiKey}&with_genres=16&sort_by=popularity.desc`);
-                const data = await response.json();
-                renderMediaCards(data.results, document.getElementById('anime').querySelector('div'), 'anime');
+                const topAnime = await fetchTopAnime(10);
+                if (topAnime) {
+                    renderNumberedMediaCards(topAnime, document.getElementById('anime').querySelector('div'), 'anime');
+                } else {
+                    // Fallback to TMDB if AniList fails
+                    const response = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${tmdbApiKey}&with_genres=16`);
+                    const data = await response.json();
+                    renderNumberedMediaCards(data.results.slice(0, 10), document.getElementById('anime').querySelector('div'), 'tv');
+                }
             } catch (error) {
-                console.error('Error loading anime:', error);
+                console.error('Error loading top anime:', error);
             }
         }
 
-        async function searchContent(query) {
+        async function fetchTopAnime(limit = 10) {
             try {
-                searchResultsContent.innerHTML = '';
+                const query = `
+                    query {
+                        Page(perPage: ${limit}) {
+                            media(sort: POPULARITY_DESC, type: ANIME) {
+                                id
+                                title {
+                                    romaji
+                                    english
+                                    native
+                                }
+                                coverImage {
+                                    large
+                                }
+                                averageScore
+                                startDate {
+                                    year
+                                }
+                            }
+                        }
+                    }
+                `;
 
-                // Search movies
-                const moviesRes = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${tmdbApiKey}&query=${query}`);
-                const moviesData = await moviesRes.json();
+                const response = await fetch(anilistEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: query
+                    })
+                });
 
-                // Search TV shows
-                const tvRes = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${tmdbApiKey}&query=${query}`);
-                const tvData = await tvRes.json();
-
-                // Combine results
-                const combinedResults = [
-                    ...moviesData.results.map(item => ({ ...item, media_type: 'movie' })),
-                    ...tvData.results.map(item => ({ ...item, media_type: 'tv' }))
-                ].sort((a, b) => b.popularity - a.popularity);
-
-                renderMediaCards(combinedResults, searchResultsContent, 'search');
+                const result = await response.json();
+                if (result.data && result.data.Page.media) {
+                    return result.data.Page.media.map(anime => ({
+                        id: anime.id,
+                        title: anime.title.english || anime.title.romaji || anime.title.native,
+                        poster_path: anime.coverImage?.large || null,
+                        vote_average: anime.averageScore ? anime.averageScore / 10 : null,
+                        release_date: anime.startDate?.year ? String(anime.startDate.year) : null
+                    }));
+                }
+                return null;
             } catch (error) {
-                console.error('Error searching content:', error);
+                console.error('Error fetching from AniList:', error);
+                return null;
             }
         }
 
-        function renderMediaCards(items, container, type) {
+        function renderNumberedMediaCards(items, container, type) {
             container.innerHTML = '';
 
             if (!items || items.length === 0) {
@@ -853,29 +909,27 @@
                 return;
             }
 
-            items.forEach(item => {
+            items.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'relative group cursor-pointer card-hover';
 
                 // Determine title and poster path based on media type
-                const title = item.title || item.name;
-                const posterPath = item.poster_path 
-                    ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-                    : 'https://placehold.co/500x750?text=No+Poster';
+                const title = item.title;
+                const posterPath = item.poster_path || 'https://placehold.co/500x750';
 
                 card.innerHTML = `
+                    <div class="top-number">${index + 1}</div>
                     <img src="${posterPath}" alt="${title}" 
-                        class="w-full h-full object-cover rounded-lg transition duration-300 group-hover:opacity-70" 
+                        class="w-full h-full object-cover rounded-lg transition duration-300 group-hover:opacity-70 relative z-0" 
                         onerror="this.src='https://placehold.co/500x750?text=No+Poster'">
-                    <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent rounded-b-lg">
+                    <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent rounded-b-lg z-10">
                         <h3 class="font-semibold truncate">${title}</h3>
                         <div class="flex justify-between items-center mt-1">
                             <span class="text-sm text-gray-300">
                                 ${item.vote_average ? item.vote_average.toFixed(1) + ' ★' : 'N/A'}
                             </span>
                             <span class="text-xs text-gray-300">
-                                ${item.release_date ? item.release_date.substring(0, 4) : 
-                                  item.first_air_date ? item.first_air_date.substring(0, 4) : 'N/A'}
+                                ${item.release_date ? item.release_date.substring(0, 4) : 'N/A'}
                             </span>
                         </div>
                     </div>
@@ -886,15 +940,194 @@
                     </div>
                 `;
 
-                // Add click event to open details
+                // Add click event to play media
                 card.addEventListener('click', () => {
-                    const mediaId = item.id;
-                    const mediaType = type === 'anime' ? 'tv' : type === 'search' ? item.media_type : type;
-                    openDetailsModal(mediaId, mediaType);
+                    if (type === 'anime') {
+                        playAnime(item.id, 1); // Default to episode 1 for anime
+                    } else {
+                        playMedia(item.id, type);
+                    }
                 });
 
                 container.appendChild(card);
             });
+        }
+
+        async function searchContent(query) {
+            try {
+                searchResultsContent.innerHTML = '';
+
+                // Search movies
+                const moviesRes = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${tmdbApiKey}&query=${query}`);
+                const moviesData = await moviesRes.json();
+
+                // Filter and map results
+                const combinedResults = moviesData.results
+                    .filter(item => item.media_type === 'movie' || item.media_type === 'tv')
+                    .map(item => ({
+                        ...item,
+                        title: item.title || item.name,
+                        release_date: item.release_date || item.first_air_date
+                    }));
+
+                if (combinedResults.length === 0) {
+                    searchResultsContent.innerHTML = '<div class="text-center py-10 text-gray-500">No results found</div>';
+                    return;
+                }
+
+                // Render results with numbering
+                combinedResults.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'relative group cursor-pointer card-hover';
+
+                    const posterPath = item.poster_path 
+                        ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+                        : 'https://placehold.co/500x750';
+
+                    card.innerHTML = `
+                        <div class="top-number">${index + 1}</div>
+                        <img src="${posterPath}" alt="${item.title}" 
+                            class="w-full h-full object-cover rounded-lg transition duration-300 group-hover:opacity-70 relative z-0" 
+                            onerror="this.src='https://placehold.co/500x750?text=No+Poster'">
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent rounded-b-lg z-10">
+                            <h3 class="font-semibold truncate">${item.title}</h3>
+                            <div class="flex justify-between items-center mt-1">
+                                <span class="text-sm text-gray-300 capitalize">${item.media_type}</span>
+                                <span class="text-xs text-gray-300">
+                                    ${item.release_date ? item.release_date.substring(0, 4) : 'N/A'}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+
+                    card.addEventListener('click', () => {
+                        if (item.media_type === 'movie') {
+                            playMedia(item.id, 'movie');
+                        } else if (item.media_type === 'tv') {
+                            openDetailsModal(item.id, 'tv');
+                        }
+                    });
+
+                    searchResultsContent.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error searching content:', error);
+            }
+        }
+
+        async function playMedia(mediaId, mediaType) {
+            try {
+                let embedUrl = '';
+                
+                if (mediaType === 'movie') {
+                    embedUrl = `https://vidsrc.cc/v2/embed/movie/${mediaId}?autoPlay=false`;
+                } else if (mediaType === 'tv') {
+                    embedUrl = `https://vidsrc.cc/v2/embed/tv/${mediaId}?autoPlay=false`;
+                }
+                
+                if (embedUrl) {
+                    playerModal.classList.remove('hidden');
+                    playerFrame.src = embedUrl;
+                    playerTitle.textContent = `Now Playing: ${mediaType === 'movie' ? 'Movie' : 'TV Show'}`;
+                    
+                    // Hide episode controls for movies
+                    document.getElementById('episodeControls').classList.add('hidden');
+                } else {
+                    throw new Error('Invalid media type');
+                }
+            } catch (error) {
+                console.error('Error playing media:', error);
+                alert('Failed to play media');
+            }
+        }
+
+        async function playAnime(animeId, episodeNumber) {
+            try {
+                const embedUrl = `https://vidsrc.cc/v2/embed/anime/ani${animeId}/${episodeNumber}/sub?autoPlay=false`;
+                
+                playerModal.classList.remove('hidden');
+                playerFrame.src = embedUrl;
+                playerTitle.textContent = 'Now Playing: Anime';
+                
+                // Show episode controls for anime
+                const controls = document.getElementById('episodeControls');
+                controls.classList.remove('hidden');
+                
+                // Set current episode info
+                currentEpisodeTitle.textContent = `Episode ${episodeNumber}`;
+                currentEpisodeDescription.textContent = 'Anime episode';
+                
+                // Track watch progress if logged in
+                if (currentUser) {
+                    updateWatchProgress(animeId, 1, episodeNumber, 'anime');
+                }
+            } catch (error) {
+                console.error('Error playing anime:', error);
+                alert('Failed to play anime');
+            }
+        }
+
+        async function playTVEpisode(tvId, seasonNumber, episodeNumber) {
+            try {
+                const embedUrl = `https://vidsrc.cc/v2/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}?autoPlay=false`;
+                
+                playerModal.classList.remove('hidden');
+                playerFrame.src = embedUrl;
+                playerTitle.textContent = 'Now Playing: Episode';
+                
+                // Show episode controls
+                const controls = document.getElementById('episodeControls');
+                controls.classList.remove('hidden');
+                
+                // Set current episode info
+                const episode = currentEpisodes.find(e => e.episode_number === episodeNumber);
+                if (episode) {
+                    currentEpisodeTitle.textContent = `S${seasonNumber}E${episodeNumber}: ${episode.name}`;
+                    currentEpisodeDescription.textContent = episode.overview || 'No description available';
+                    
+                    // Set current episode index for navigation
+                    const episodeIndex = currentEpisodes.findIndex(e => e.episode_number === episodeNumber);
+                    playerFrame.setAttribute('data-episode-index', episodeIndex);
+                }
+                
+                // Update watch progress if logged in
+                if (currentUser) {
+                    updateWatchProgress(tvId, seasonNumber, episodeNumber, 'tv');
+                }
+            } catch (error) {
+                console.error('Error playing episode:', error);
+                alert('Failed to play episode');
+            }
+        }
+
+        function playEpisode(episodeIndex) {
+            if (episodeIndex >= 0 && episodeIndex < currentEpisodes.length) {
+                const episode = currentEpisodes[episodeIndex];
+                if (currentMediaType === 'tv') {
+                    playTVEpisode(currentMediaId, currentSeason, episode.episode_number);
+                } else if (currentMediaType === 'anime') {
+                    playAnime(currentMediaId, episode.episode_number);
+                }
+            }
+        }
+
+        async function updateWatchProgress(mediaId, seasonNumber, episodeNumber, mediaType) {
+            if (!currentUser) return;
+            
+            try {
+                await supabase
+                    .from('watch_progress')
+                    .upsert({
+                        user_id: currentUser.id,
+                        media_id: mediaId,
+                        media_type: mediaType,
+                        season_number: seasonNumber || 1,
+                        episode_number: episodeNumber || 1,
+                        last_watched_at: new Date()
+                    }, { onConflict: ['user_id', 'media_id'] });
+            } catch (error) {
+                console.error('Error updating watch progress:', error);
+            }
         }
 
         async function openDetailsModal(mediaId, mediaType) {
@@ -904,20 +1137,20 @@
             try {
                 let details;
                 if (mediaType === 'tv') {
-                    // For TV shows, check if it's anime and try to get more details from AniList
-                    const animeData = await getAnimeDetails(mediaId);
-                    if (animeData) {
-                        currentAnimeData = animeData;
-                        populateAnimeDetails(animeData);
-                    } else {
-                        const response = await fetch(`https://api.themoviedb.org/3/tv/${mediaId}?api_key=${tmdbApiKey}`);
-                        details = await response.json();
-                        populateTVDetails(details);
-                    }
-                } else {
+                    const response = await fetch(`https://api.themoviedb.org/3/tv/${mediaId}?api_key=${tmdbApiKey}`);
+                    details = await response.json();
+                    populateTVDetails(details);
+                } else if (mediaType === 'movie') {
                     const response = await fetch(`https://api.themoviedb.org/3/movie/${mediaId}?api_key=${tmdbApiKey}`);
                     details = await response.json();
                     populateMovieDetails(details);
+                } else if (mediaType === 'anime') {
+                    const anime = await getAnimeDetails(mediaId);
+                    if (anime) {
+                        populateAnimeDetails(anime);
+                    } else {
+                        throw new Error('Failed to load anime details');
+                    }
                 }
 
                 // Check watchlist status
@@ -932,11 +1165,52 @@
             }
         }
 
-        async function getAnimeDetails(tmdbId) {
+        async function getAnimeDetails(animeId) {
             try {
-                // In a real implementation, you'd match TMDB ID to AniList ID
-                // This is simplified - would need a proper mapping service
-                return null; // Placeholder - implement proper AniList API integration
+                const query = `
+                    query ($id: Int) {
+                        Media(id: $id, type: ANIME) {
+                            id
+                            title {
+                                romaji
+                                english
+                                native
+                            }
+                            description
+                            coverImage {
+                                large
+                                extraLarge
+                            }
+                            bannerImage
+                            averageScore
+                            status
+                            startDate {
+                                year
+                                month
+                                day
+                            }
+                            episodes
+                        }
+                    }
+                `;
+
+                const response = await fetch(anilistEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        variables: { id: animeId }
+                    })
+                });
+
+                const result = await response.json();
+                if (result.data && result.data.Media) {
+                    return result.data.Media;
+                }
+                return null;
             } catch (error) {
                 console.error('Error fetching anime details:', error);
                 return null;
@@ -947,10 +1221,10 @@
             detailsTitle.textContent = movie.title;
             detailsBackdrop.src = movie.backdrop_path 
                 ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
-                : 'https://placehold.co/1280x720?text=No+Backdrop';
+                : 'https://placehold.co/1280x720';
             detailsPoster.src = movie.poster_path 
                 ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                : 'https://placehold.co/500x750?text=No+Poster';
+                : 'https://placehold.co/500x750';
             detailsOverview.textContent = movie.overview || 'No overview available';
             detailsStatus.textContent = movie.status || 'N/A';
             detailsDate.textContent = movie.release_date || 'N/A';
@@ -972,17 +1246,17 @@
             episodesContainer.classList.add('hidden');
 
             // Set watch now button action
-            watchNowBtn.onclick = () => playMovie(movie.id);
+            watchNowBtn.onclick = () => playMedia(movie.id, 'movie');
         }
 
         function populateTVDetails(tvShow) {
             detailsTitle.textContent = tvShow.name;
             detailsBackdrop.src = tvShow.backdrop_path 
                 ? `https://image.tmdb.org/t/p/original${tvShow.backdrop_path}`
-                : 'https://placehold.co/1280x720?text=No+Backdrop';
+                : 'https://placehold.co/1280x720';
             detailsPoster.src = tvShow.poster_path 
                 ? `https://image.tmdb.org/t/p/w500${tvShow.poster_path}`
-                : 'https://placehold.co/500x750?text=No+Poster';
+                : 'https://placehold.co/500x750';
             detailsOverview.textContent = tvShow.overview || 'No overview available';
             detailsStatus.textContent = tvShow.status || 'N/A';
             detailsDate.textContent = tvShow.first_air_date || 'N/A';
@@ -1021,13 +1295,45 @@
         }
 
         function populateAnimeDetails(anime) {
-            // Implement anime-specific details population
-            // Would use data from AniList API
-            detailsTitle.textContent = anime.title?.english || anime.title?.native || 'Anime Title';
-            detailsOverview.textContent = anime.description || 'No description available';
+            detailsTitle.textContent = anime.title?.english || anime.title?.romaji || anime.title?.native || 'Anime';
             
+            detailsBackdrop.src = anime.bannerImage 
+                ? anime.bannerImage 
+                : 'https://placehold.co/1280x720';
+                
+            detailsPoster.src = anime.coverImage?.extraLarge || anime.coverImage?.large || 'https://placehold.co/500x750';
+            
+            // Clean up description (AniList descriptions include HTML tags)
+            const cleanDescription = anime.description 
+                ? anime.description.replace(/<\/?[^>]+(>|$)/g, '') 
+                : 'No description available';
+            detailsOverview.textContent = cleanDescription.length > 300 
+                ? cleanDescription.substring(0, 300) + '...' 
+                : cleanDescription;
+                
+            detailsStatus.textContent = anime.status ? anime.status.replace(/_/g, ' ') : 'N/A';
+            detailsDate.textContent = anime.startDate?.year ? anime.startDate.year : 'N/A';
+            detailsRating.textContent = anime.averageScore ? (anime.averageScore / 10).toFixed(1) + '/10' : 'N/A';
+
+            // Handle genres (not available in this basic implementation)
+            detailsGenres.innerHTML = '<span class="bg-accent px-3 py-1 text-sm rounded-full">Anime</span>';
+
+            // For anime, we'll show episode list in the episodes container
+            seasonsContainer.classList.add('hidden');
+            episodesContainer.classList.remove('hidden');
+            
+            // Create a simple episode list for anime (1 to total episodes)
+            if (anime.episodes) {
+                currentEpisodes = Array.from({length: anime.episodes}, (_, i) => ({
+                    episode_number: i + 1,
+                    name: `Episode ${i + 1}`,
+                    overview: ''
+                }));
+                renderEpisodes(currentEpisodes);
+            }
+
             // Set watch now button action
-            watchNowBtn.onclick = () => playAnime(anime.id);
+            watchNowBtn.onclick = () => playAnime(anime.id, 1);
         }
 
         function renderSeasons(seasons) {
@@ -1041,7 +1347,7 @@
                     <div class="relative w-full aspect-[2/3] rounded-lg overflow-hidden">
                         <img src="${season.poster_path 
                             ? `https://image.tmdb.org/t/p/w185${season.poster_path}`
-                            : 'https://placehold.co/185x278?text=No+Poster'}" 
+                            : 'https://placehold.co/185x278'}" 
                             alt="${season.name}" class="w-full h-full object-cover"
                             onerror="this.src='https://placehold.co/185x278?text=No+Poster'">
                     </div>
@@ -1066,6 +1372,7 @@
                 renderEpisodes(data.episodes);
             } catch (error) {
                 console.error('Error loading episodes:', error);
+                episodesList.innerHTML = '<p class="text-gray-400">Failed to load episodes</p>';
             }
         }
 
@@ -1073,7 +1380,7 @@
             episodesList.innerHTML = '';
             
             if (!episodes || episodes.length === 0) {
-                episodesContainer.innerHTML = '<p class="text-gray-400">No episodes available</p>';
+                episodesList.innerHTML = '<p class="text-gray-400">No episodes available</p>';
                 return;
             }
 
@@ -1084,7 +1391,7 @@
                     <div class="flex-shrink-0 w-32 h-20 bg-gray-700 rounded overflow-hidden">
                         <img src="${episode.still_path 
                             ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
-                            : 'https://placehold.co/300x169?text=No+Image'}" 
+                            : 'https://placehold.co/300x169'}" 
                             alt="${episode.name}" class="w-full h-full object-cover"
                             onerror="this.src='https://placehold.co/300x169?text=No+Image'">
                     </div>
@@ -1101,82 +1408,20 @@
                 `;
 
                 episodeEl.addEventListener('click', () => {
-                    playTVEpisode(currentMediaId, currentSeason, episode.episode_number);
+                    if (currentMediaType === 'tv') {
+                        playTVEpisode(currentMediaId, currentSeason, episode.episode_number);
+                    } else if (currentMediaType === 'anime') {
+                        playAnime(currentMediaId, episode.episode_number);
+                    }
                 });
 
                 episodesList.appendChild(episodeEl);
             });
         }
 
-        async function playMovie(movieId) {
-            try {
-                // Get TMDB ID and construct VidSrc URL
-                const vidSrcUrl = `https://vidsrc.cc/embed/${movieId}`;
-                
-                playerModal.classList.remove('hidden');
-                playerFrame.src = vidSrcUrl;
-                playerTitle.textContent = 'Now Playing: Movie';
-                
-                // Hide episode controls for movies
-                document.getElementById('episodeControls').classList.add('hidden');
-            } catch (error) {
-                console.error('Error playing movie:', error);
-                alert('Failed to play movie');
-            }
-        }
-
-        async function playTVEpisode(tvId, seasonNumber, episodeNumber) {
-            try {
-                // Get TMDB ID and construct VidSrc URL
-                const vidSrcUrl = `https://vidsrc.cc/embed/${tvId}/${seasonNumber}/${episodeNumber}`;
-                
-                playerModal.classList.remove('hidden');
-                playerFrame.src = vidSrcUrl;
-                playerTitle.textContent = 'Now Playing: Episode';
-                
-                // Show episode controls
-                const controls = document.getElementById('episodeControls');
-                controls.classList.remove('hidden');
-                
-                // Set current episode info
-                const episode = currentEpisodes.find(e => e.episode_number === episodeNumber);
-                if (episode) {
-                    currentEpisodeTitle.textContent = `S${seasonNumber}E${episodeNumber}: ${episode.name}`;
-                    currentEpisodeDescription.textContent = episode.overview || 'No description available';
-                    
-                    // Set current episode index for navigation
-                    const episodeIndex = currentEpisodes.findIndex(e => e.episode_number === episodeNumber);
-                    playerFrame.setAttribute('data-episode-index', episodeIndex);
-                }
-                
-                // Update watch progress if logged in
-                if (currentUser) {
-                    updateWatchProgress(tvId, seasonNumber, episodeNumber, 'tv');
-                }
-            } catch (error) {
-                console.error('Error playing episode:', error);
-                alert('Failed to play episode');
-            }
-        }
-
-        async function updateWatchProgress(mediaId, seasonNumber, episodeNumber, mediaType) {
-            try {
-                await supabase
-                    .from('watch_progress')
-                    .upsert({
-                        user_id: currentUser.id,
-                        media_id: mediaId,
-                        media_type: mediaType,
-                        season_number: seasonNumber,
-                        episode_number: episodeNumber,
-                        last_watched_at: new Date()
-                    }, { onConflict: ['user_id', 'media_id'] });
-            } catch (error) {
-                console.error('Error updating watch progress:', error);
-            }
-        }
-
         async function checkWatchlistStatus(mediaId, mediaType) {
+            if (!currentUser) return;
+            
             try {
                 const { data, error } = await supabase
                     .from('watchlist')
@@ -1234,9 +1479,17 @@
                     watchlistBtn.classList.add('border-accent', 'hover:bg-blue-900');
                 } else {
                     // Add to watchlist
-                    const details = await getMediaDetails(mediaId, mediaType);
-                    const title = mediaType === 'movie' ? details.title : details.name;
-                    const poster = details.poster_path ? `https://image.tmdb.org/t/p/w500${details.poster_path}` : null;
+                    let title, poster;
+                    
+                    if (mediaType === 'anime') {
+                        const anime = await getAnimeDetails(mediaId);
+                        title = anime.title?.english || anime.title?.romaji || anime.title?.native;
+                        poster = anime.coverImage?.large || anime.coverImage?.extraLarge;
+                    } else {
+                        const details = await getMediaDetails(mediaId, mediaType);
+                        title = mediaType === 'movie' ? details.title : details.name;
+                        poster = details.poster_path ? `https://image.tmdb.org/t/p/w500${details.poster_path}` : null;
+                    }
 
                     const { error: insertError } = await supabase
                         .from('watchlist')
@@ -1258,6 +1511,11 @@
 
                 // Update watchlist count
                 updateWatchlistCount();
+                
+                // Refresh watchlist if on that page
+                if (document.getElementById('watchlist') && !document.getElementById('watchlist').classList.contains('hidden')) {
+                    loadWatchlist();
+                }
             } catch (error) {
                 console.error('Error toggling watchlist:', error);
                 alert('Failed to update watchlist');
@@ -1298,7 +1556,7 @@
                     card.className = 'relative group cursor-pointer card-hover';
 
                     card.innerHTML = `
-                        <img src="${item.poster_path || 'https://placehold.co/500x750?text=No+Poster'}" 
+                        <img src="${item.poster_path || 'https://placehold.co/500x750'}" 
                             alt="${item.title}" 
                             class="w-full h-full object-cover rounded-lg transition duration-300 group-hover:opacity-70"
                             onerror="this.src='https://placehold.co/500x750?text=No+Poster'">
@@ -1313,7 +1571,13 @@
                         </div>
                     `;
 
-                    card.addEventListener('click', () => openDetailsModal(item.media_id, item.media_type));
+                    card.addEventListener('click', () => {
+                        if (item.media_type === 'movie' || item.media_type === 'tv') {
+                            openDetailsModal(item.media_id, item.media_type);
+                        } else if (item.media_type === 'anime') {
+                            playAnime(item.media_id, 1); // Default to episode 1 for anime
+                        }
+                    });
 
                     // Add remove button
                     const removeBtn = document.createElement('button');
@@ -1342,7 +1606,7 @@
 
             profileUsername.textContent = currentUser.profile?.username || 'User';
             profileEmail.textContent = currentUser.email;
-            profileAvatar.src = currentUser.profile?.avatar_url || 'https://placehold.co/120x120?text=User';
+            profileAvatar.src = currentUser.profile?.avatar_url || 'https://placehold.co/120x120';
             accountCreated.textContent = new Date(currentUser.created_at).toLocaleDateString();
 
             // Get watch progress
@@ -1354,22 +1618,46 @@
 
             if (!error && progress && progress.length > 0) {
                 // Add "Continue Watching" section to profile
+                const profileContainer = document.querySelector('#profile > div');
+                
+                // Remove existing continue watching section if present
+                const existingContinueWatching = document.getElementById('continueWatchingContainer');
+                if (existingContinueWatching) {
+                    existingContinueWatching.remove();
+                }
+
                 const continueWatching = document.createElement('div');
                 continueWatching.className = 'mt-8';
+                continueWatching.id = 'continueWatchingContainer';
                 continueWatching.innerHTML = `
                     <h2 class="text-xl font-bold mb-6">Continue Watching</h2>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="continueWatching"></div>
                 `;
 
-                document.querySelector('#profile > div').appendChild(continueWatching);
+                profileContainer.appendChild(continueWatching);
 
-                progress.slice(0, 5).forEach(async item => {
+                // Process the first 5 items
+                const itemsToShow = progress.slice(0, 5);
+                
+                for (const item of itemsToShow) {
                     try {
-                        const details = await getMediaDetails(item.media_id, item.media_type);
-                        const title = item.media_type === 'movie' ? details.title : details.name;
-                        const poster = details.poster_path 
-                            ? `https://image.tmdb.org/t/p/w300${details.poster_path}`
-                            : 'https://placehold.co/300x450?text=No+Poster';
+                        let title, poster, mediaType;
+                        
+                        if (item.media_type === 'anime') {
+                            const anime = await getAnimeDetails(item.media_id);
+                            if (!anime) continue;
+                            
+                            title = anime.title?.english || anime.title?.romaji || anime.title?.native;
+                            poster = anime.coverImage?.large || anime.coverImage?.extraLarge;
+                            mediaType = 'anime';
+                        } else {
+                            const details = await getMediaDetails(item.media_id, item.media_type);
+                            title = item.media_type === 'movie' ? details.title : details.name;
+                            poster = details.poster_path 
+                                ? `https://image.tmdb.org/t/p/w300${details.poster_path}`
+                                : 'https://placehold.co/300x450';
+                            mediaType = item.media_type;
+                        }
 
                         const card = document.createElement('div');
                         card.className = 'relative group cursor-pointer';
@@ -1379,8 +1667,8 @@
                                 onerror="this.src='https://placehold.co/300x450?text=No+Poster'">
                             <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black to-transparent rounded-b-lg">
                                 <p class="text-sm truncate">${title}</p>
-                                ${item.media_type === 'tv' 
-                                    ? `<p class="text-xs text-gray-300">S${item.season_number}E${item.episode_number}</p>`
+                                ${item.media_type === 'tv' || item.media_type === 'anime'
+                                    ? `<p class="text-xs text-gray-300">E${item.episode_number}</p>`
                                     : ''}
                             </div>
                         `;
@@ -1388,8 +1676,10 @@
                         card.addEventListener('click', () => {
                             if (item.media_type === 'tv') {
                                 playTVEpisode(item.media_id, item.season_number, item.episode_number);
+                            } else if (item.media_type === 'anime') {
+                                playAnime(item.media_id, item.episode_number);
                             } else {
-                                playMovie(item.media_id);
+                                playMedia(item.media_id, 'movie');
                             }
                         });
 
@@ -1397,10 +1687,9 @@
                     } catch (error) {
                         console.error('Error loading continue watching item:', error);
                     }
-                });
+                }
             }
         }
     </script>
 </body>
 </html>
-
