@@ -1,41 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Streamlyst</title>
-  <link rel="stylesheet" href="css/style.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamHub - Watch Movies, TV Shows & Anime</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <header>
-    <h1>Streamlyst</h1>
-    <nav>
-      <input type="text" id="searchInput" placeholder="Search for movies, shows, anime...">
-      <button id="loginBtn">Login</button>
-      <button id="registerBtn">Register</button>
-    </nav>
-  </header>
+    <div class="auth-container" id="auth-container">
+        <!-- Auth forms will be injected here by auth.js -->
+    </div>
 
-  <main>
-    <section id="movies">
-      <h2>Top 10 Movies</h2>
-      <div class="cards" id="moviesList"></div>
-    </section>
+    <div class="main-container" id="main-container" style="display: none;">
+        <header>
+            <div class="logo">
+                <h1>Stream<span>Hub</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link active" data-section="home">Home</a></li>
+                    <li><a href="#" class="nav-link" data-section="movies">Movies</a></li>
+                    <li><a href="#" class="nav-link" data-section="tv">TV Shows</a></li>
+                    <li><a href="#" class="nav-link" data-section="anime">Anime</a></li>
+                    <li><a href="#" class="nav-link" data-section="watchlist">Watchlist</a></li>
+                </ul>
+            </nav>
+            <div class="search-user">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search...">
+                    <button id="search-button"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="user-dropdown">
+                    <button id="user-button"><i class="fas fa-user"></i></button>
+                    <div class="dropdown-content">
+                        <a href="#" id="profile-link">Profile</a>
+                        <a href="#" id="logout-link">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-    <section id="tv">
-      <h2>Top 10 TV Series</h2>
-      <div class="cards" id="tvList"></div>
-    </section>
+        <main>
+            <section id="home-section" class="content-section active">
+                <div class="hero">
+                    <h2>Welcome to StreamHub</h2>
+                    <p>Watch your favorite movies, TV shows, and anime all in one place</p>
+                </div>
+                <div class="trending-container">
+                    <h3>Trending Now</h3>
+                    <div class="media-grid" id="trending-grid"></div>
+                </div>
+            </section>
 
-    <section id="anime">
-      <h2>Top 10 Anime</h2>
-      <div class="cards" id="animeList"></div>
-    </section>
-  </main>
+            <section id="movies-section" class="content-section">
+                <h2>Popular Movies</h2>
+                <div class="media-grid" id="movies-grid"></div>
+            </section>
 
-  <script src="js/components.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/main.js"></script>
+            <section id="tv-section" class="content-section">
+                <h2>Popular TV Shows</h2>
+                <div class="media-grid" id="tv-grid"></div>
+            </section>
+
+            <section id="anime-section" class="content-section">
+                <h2>Popular Anime</h2>
+                <div class="media-grid" id="anime-grid"></div>
+            </section>
+
+            <section id="watchlist-section" class="content-section">
+                <h2>Your Watchlist</h2>
+                <div class="media-grid" id="watchlist-grid"></div>
+            </section>
+
+            <section id="search-section" class="content-section">
+                <h2>Search Results</h2>
+                <div class="media-grid" id="search-grid"></div>
+            </section>
+
+            <section id="details-section" class="content-section">
+                <div class="back-button">
+                    <button id="back-button"><i class="fas fa-arrow-left"></i> Back</button>
+                </div>
+                <div class="media-details" id="media-details"></div>
+            </section>
+
+            <section id="player-section" class="content-section">
+                <div class="back-button">
+                    <button id="player-back-button"><i class="fas fa-arrow-left"></i> Back to Details</button>
+                </div>
+                <div class="player-container" id="player-container"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2023 StreamHub. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/search.js"></script>
+    <script src="/js/player.js"></script>
+    <script src="/js/watchlist.js"></script>
 </body>
 </html>
