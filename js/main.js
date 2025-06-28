@@ -128,12 +128,17 @@ function renderMediaGrid(items, gridElement) {
         mediaCard.dataset.id = item.id;
         mediaCard.dataset.type = item.media_type || item.type;
         
-        const posterPath = item.poster_path || item.coverImage?.large || 'https://via.placeholder.com/200x300?text=No+Image';
+        const posterPath = item.poster_path || item.coverImage?.large || '';
         const title = item.title || item.name || item.title?.userPreferred || 'Untitled';
         const year = item.release_date?.substring(0, 4) || item.startDate?.year || '';
-        
+
         mediaCard.innerHTML = `
-            <img src="${posterPath}" alt="${title}" onerror="this.src='https://via.placeholder.com/200x300?text=No+Image'">
+            <div class="media-poster-container">
+                ${posterPath ? 
+                    `<img src="${posterPath}" alt="${title}" onerror="this.onerror=null;this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'300\' viewBox=\'0 0 200 300\'%3E%3Crect fill=\'%23222\' width=\'200\' height=\'300\'/%3E%3Ctext fill=\'%23fff\' font-family=\'sans-serif\' font-size=\'16\' dy=\'0.35em\' text-anchor=\'middle\' x=\'100\' y=\'150\'%3ENo Image%3C/text%3E%3C/svg%3E'">` : 
+                    `<div class="no-poster">No Image</div>`
+                }
+            </div>
             <div class="media-info">
                 <h3>${title}</h3>
                 <p>${year}</p>
@@ -236,7 +241,10 @@ function renderMediaDetails(details, type) {
     
     detailsSection.innerHTML = `
         <div class="detail-poster">
-            <img src="${posterPath}" alt="${title}" onerror="this.src='https://via.placeholder.com/500x750?text=No+Image'">
+            ${posterPath ? 
+                `<img src="${posterPath}" alt="${title}" onerror="this.onerror=null;this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'500\' height=\'750\' viewBox=\'0 0 500 750\'%3E%3Crect fill=\'%23222\' width=\'500\' height=\'750\'/%3E%3Ctext fill=\'%23fff\' font-family=\'sans-serif\' font-size=\'24\' dy=\'0.35em\' text-anchor=\'middle\' x=\'250\' y=\'375\'%3ENo Image Available%3C/text%3E%3C/svg%3E'">` : 
+                `<div class="no-poster-large">No Image Available</div>`
+            }
         </div>
         <div class="detail-content">
             <h1>${title} ${year ? `(${year})` : ''}</h1>
