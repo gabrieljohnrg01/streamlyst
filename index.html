@@ -1,23 +1,33 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Streamlyst - Free Streaming</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Streamlyst - Login/Register</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script defer src="script.js"></script>
 </head>
-<body>
-    <header>
-        <h1>Streamlyst</h1>
-        <button id="loginBtn">Login</button>
-        <button id="logoutBtn" style="display:none">Logout</button>
-    </header>
+<body style="background:#0a0f1c; color:white; text-align:center; font-family:sans-serif;">
+    <h1>Streamlyst</h1>
 
-    <main>
-        <h2>Welcome to Streamlyst</h2>
-        <p>Watch free content via vidsrc.cc, track your progress, and manage your watchlist.</p>
-        <a href="dashboard.html" class="button">Go to Dashboard</a>
-    </main>
+    <!-- Registration Form -->
+    <form id="registerForm">
+        <h2>Register</h2>
+        <input type="email" id="registerEmail" placeholder="Email" required><br>
+        <input type="text" id="registerUsername" placeholder="Username" required><br>
+        <input type="password" id="registerPassword" placeholder="Password" required><br>
+        <button type="submit">Register</button>
+    </form>
+
+    <!-- Login Form -->
+    <form id="loginForm" style="margin-top:20px;">
+        <h2>Login</h2>
+        <input type="text" id="loginIdentifier" placeholder="Email or Username" required><br>
+        <input type="password" id="loginPassword" placeholder="Password" required><br>
+        <button type="submit">Login</button>
+    </form>
+
+    <button id="logoutBtn" style="display:none; margin-top:20px;">Logout</button>
+
+    <script src="script.js"></script>
 </body>
 </html>
