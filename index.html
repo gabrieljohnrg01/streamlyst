@@ -746,7 +746,28 @@
             try {
                 const response = await fetch(`${CONFIG.TMDB_BASE_URL}/trending/all/week?api_key=${CONFIG.TMDB_API_KEY}`);
                 const data = await response.json();
-                displayContent(data.results);
+                // Filter out anime content (typically has specific genres or keywords)
+                const filteredResults = data.results.filter(item => {
+                    // Filter out content that might be anime
+                    const title = (item.title || item.name || '').toLowerCase();
+                    const overview = (item.overview || '').toLowerCase();
+                    
+                    // Common anime indicators
+                    const animeKeywords = ['anime', 'manga', 'japanese animation', 'studio ghibli'];
+                    const hasAnimeKeywords = animeKeywords.some(keyword => 
+                        title.includes(keyword) || overview.includes(keyword)
+                    );
+                    
+                    // Filter out if it has anime keywords or is from Japan with animation genre
+                    return !hasAnimeKeywords && !(
+                        item.origin_country && 
+                        item.origin_country.includes('JP') && 
+                        item.genre_ids && 
+                        item.genre_ids.includes(16) // Animation genre ID
+                    );
+                });
+                
+                displayContent(filteredResults);
             } catch (error) {
                 console.error('Error loading trending content:', error);
                 showError('Failed to load trending content');
