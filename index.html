@@ -1,33 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Streamlyst - Login/Register</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Supabase Auth Login/Register</title>
 </head>
-<body style="background:#0a0f1c; color:white; text-align:center; font-family:sans-serif;">
-    <h1>Streamlyst</h1>
+<body>
+  <h2>Register</h2>
+  <form id="register-form">
+    <input type="email" id="register-email" placeholder="Email" required /><br/>
+    <input type="password" id="register-password" placeholder="Password" required /><br/>
+    <button type="submit">Register</button>
+  </form>
 
-    <!-- Registration Form -->
-    <form id="registerForm">
-        <h2>Register</h2>
-        <input type="email" id="registerEmail" placeholder="Email" required><br>
-        <input type="text" id="registerUsername" placeholder="Username" required><br>
-        <input type="password" id="registerPassword" placeholder="Password" required><br>
-        <button type="submit">Register</button>
-    </form>
+  <h2>Login</h2>
+  <form id="login-form">
+    <input type="email" id="login-email" placeholder="Email" required /><br/>
+    <input type="password" id="login-password" placeholder="Password" required /><br/>
+    <button type="submit">Login</button>
+  </form>
 
-    <!-- Login Form -->
-    <form id="loginForm" style="margin-top:20px;">
-        <h2>Login</h2>
-        <input type="text" id="loginIdentifier" placeholder="Email or Username" required><br>
-        <input type="password" id="loginPassword" placeholder="Password" required><br>
-        <button type="submit">Login</button>
-    </form>
+  <pre id="output"></pre>
 
-    <button id="logoutBtn" style="display:none; margin-top:20px;">Logout</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = 'https://fxjfjuuewhecnyvpdwtc.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4amZqdXVld2hlY255dnBkd3RjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEwODc4NjAsImV4cCI6MjA2NjY2Mzg2MH0.Znwtrg4_srPFF6DV8beEE1Mvvi5RoyUzqYr1QaCnghQ';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    <script src="script.js"></script>
+    const output = document.getElementById('output');
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        output.textContent = `Registration Error: ${error.message}`;
+      } else {
+        output.textContent = `Registered! Please check your email to confirm. User ID: ${data.user.id}`;
+      }
+    });
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        output.textContent = `Login Error: ${error.message}`;
+      } else {
+        output.textContent = `Logged in! Access token: ${data.session.access_token}`;
+      }
+    });
+  </script>
 </body>
 </html>

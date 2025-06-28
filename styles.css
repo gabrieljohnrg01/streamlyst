@@ -1,6 +1,0 @@
-body { font-family: sans-serif; background: #0a0f1c; color: #fff; text-align: center; }
-header { padding: 1rem; background: #111d35; }
-button, .button { background: #1d4ed8; color: white; padding: 0.5rem 1rem; margin: 0.5rem; border: none; border-radius: 8px; cursor: pointer; }
-button:hover, .button:hover { background: #2563eb; }
-main { padding: 1rem; }
-#watchlist, #recommendations { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
