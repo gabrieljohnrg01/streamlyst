@@ -1,209 +1,23 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="6a97888e-site-verification" content="a586a280e346cb1e67bf2acf5cc81ff2">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Movie & TV Streaming</title>
-  <link rel="stylesheet" href="css/home.css">
-
-  <style>
-    /* ==== ADS LAYOUT ==== */
-    .ad-top, .ad-bottom {
-      position: fixed;
-      left: 0;
-      width: 100%;
-      text-align: center;
-      z-index: 999;
-      height: 70px;
-      overflow: hidden;
-    }
-
-    .ad-top { top: 0; }
-    .ad-bottom { bottom: 0; }
-
-    .ad-left, .ad-right {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 120px;
-      z-index: 999;
-      overflow: hidden;
-    }
-
-    .ad-left { left: 0; }
-    .ad-right { right: 0; }
-
-    header {
-      margin-top: 75px;
-      z-index: 1000;
-      position: relative;
-    }
-
-    .content {
-      margin-bottom: 80px;
-      padding-left: 140px;
-      padding-right: 140px;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 1024px) {
-      .ad-left, .ad-right {
-        width: 100px;
-      }
-
-      .content {
-        padding-left: 110px;
-        padding-right: 110px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .ad-left, .ad-right {
-        display: none;
-      }
-
-      .ad-top, .ad-bottom {
-        height: 50px;
-      }
-
-      header {
-        margin-top: 55px;
-      }
-
-      .content {
-        margin-bottom: 60px;
-        padding: 10px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .ad-top, .ad-bottom {
-        height: 40px;
-      }
-
-      header {
-        margin-top: 45px;
-      }
-
-      .content {
-        margin-bottom: 50px;
-      }
-    }
-
-    .modal {
-      z-index: 1001; /* Over ads */
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Streamlyst - Free Streaming</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script defer src="script.js"></script>
 </head>
 <body>
+    <header>
+        <h1>Streamlyst</h1>
+        <button id="loginBtn">Login</button>
+        <button id="logoutBtn" style="display:none">Logout</button>
+    </header>
 
-  <!-- === AD ZONES === -->
-  <div class="ad-top">
-    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-    <ins class="eas6a97888e2" data-zoneid="5644240"></ins>
-    <script>(AdProvider = window.AdProvider || []).push({ serve: {} });</script>
-  </div>
-
-  <div class="ad-bottom">
-    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-    <ins class="eas6a97888e2" data-zoneid="5644242"></ins>
-    <script>(AdProvider = window.AdProvider || []).push({ serve: {} });</script>
-  </div>
-
-  <div class="ad-left">
-    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-    <ins class="eas6a97888e2" data-zoneid="5644244"></ins>
-    <script>(AdProvider = window.AdProvider || []).push({ serve: {} });</script>
-  </div>
-
-  <div class="ad-right">
-    <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-    <ins class="eas6a97888e2" data-zoneid="5644246"></ins>
-    <script>(AdProvider = window.AdProvider || []).push({ serve: {} });</script>
-  </div>
-
-  <!-- === HEADER === -->
-  <header>
-    <div class="navbar">
-      <h1>Streamlyst</h1>
-      <div class="nav-buttons">
-        <button onclick="openSearchModal()" class="search-btn">🔍 Search</button>
-      </div>
-    </div>
-  </header>
-
-  <!-- === BANNER === -->
-  <section id="banner" class="banner">
-    <div class="banner-content">
-      <h2 id="banner-title">Loading...</h2>
-    </div>
-  </section>
-
-  <!-- === MAIN CONTENT === -->
-  <main class="content">
-    <section class="media-section">
-      <h3>Trending Movies</h3>
-      <div id="movies-list" class="media-list"></div>
-    </section>
-
-    <section class="media-section">
-      <h3>Trending TV Shows</h3>
-      <div id="tvshows-list" class="media-list"></div>
-    </section>
-
-    <section class="media-section">
-      <h3>Trending Anime</h3>
-      <div id="anime-list" class="media-list"></div>
-    </section>
-  </main>
-
-  <!-- === VIDEO MODAL === -->
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modal-title">Title</h2>
-        <button onclick="closeModal()" class="close-btn">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="modal-info">
-          <img id="modal-image" src="" alt="Poster">
-          <div class="modal-details">
-            <div id="modal-rating" class="rating"></div>
-            <p id="modal-description">Description</p>
-          </div>
-        </div>
-        <div class="modal-video-container">
-          <iframe id="modal-video" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- === SEARCH MODAL === -->
-  <div id="search-modal" class="modal">
-    <div class="modal-content search-modal-content">
-      <div class="modal-header">
-        <h2>Search Movies & TV Shows</h2>
-        <button onclick="closeSearchModal()" class="close-btn">&times;</button>
-      </div>
-      <div class="search-container">
-        <input 
-          type="text" 
-          id="search-input" 
-          placeholder="Search for movies, TV shows, anime..." 
-          oninput="searchTMDB()"
-        >
-      </div>
-      <div id="search-results" class="media-list"></div>
-    </div>
-  </div>
-
-  <!-- === FOOTER === -->
-  <footer style="text-align: center; font-size: 0.9em; padding: 20px;">
-    <p>Disclaimer: Streamlyst does not host or upload any video content. All videos are embedded from third-party sources.</p>
-  </footer>
-
-  <script src="js/home.js"></script>
+    <main>
+        <h2>Welcome to Streamlyst</h2>
+        <p>Watch free content via vidsrc.cc, track your progress, and manage your watchlist.</p>
+        <a href="dashboard.html" class="button">Go to Dashboard</a>
+    </main>
 </body>
 </html>
