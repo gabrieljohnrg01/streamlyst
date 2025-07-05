@@ -4,498 +4,173 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Streamlyst - Your Ultimate Streaming Platform</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #e2e8f0;
-            min-height: 100vh;
-        }
-
-        .navbar {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            border-bottom: 1px solid #334155;
-        }
-
-        .nav-container {
+        /* Ad banner styles */
+        .ad-banner {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: #e2e8f0;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #3b82f6;
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .btn-primary {
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: #e2e8f0;
-            border: 1px solid #475569;
-        }
-
-        .btn-secondary:hover {
-            background: #475569;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .main-content {
-            margin-top: 80px;
-            padding: 2rem 0;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 4rem 0;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23334155" width="1200" height="600"/><circle fill="%233b82f6" opacity="0.1" cx="200" cy="150" r="100"/><circle fill="%231d4ed8" opacity="0.1" cx="800" cy="300" r="150"/><circle fill="%233b82f6" opacity="0.05" cx="1000" cy="100" r="200"/></svg>');
-            background-size: cover;
-            border-radius: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: #94a3b8;
-            margin-bottom: 2rem;
-        }
-
-        .search-bar {
-            display: flex;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            position: relative;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 1rem;
-            border: 1px solid #475569;
-            border-radius: 0.5rem 0 0 0.5rem;
-            background: rgba(30, 41, 59, 0.8);
-            color: #e2e8f0;
-            font-size: 1rem;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-
-        .search-btn {
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            border: none;
-            border-radius: 0 0.5rem 0.5rem 0;
-            color: white;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .search-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .categories {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+            padding: 5px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 8px;
+            min-height: 90px;
         }
-
-        .category-btn {
-            padding: 0.75rem 1.5rem;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid #475569;
-            border-radius: 2rem;
-            color: #e2e8f0;
-            cursor: pointer;
-            transition: all 0.3s;
+        
+        .ad-banner.top {
+            margin-bottom: 20px;
         }
-
-        .category-btn:hover, .category-btn.active {
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            border-color: #3b82f6;
-            transform: translateY(-2px);
+        
+        .ad-banner.bottom {
+            margin-top: 20px;
         }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .content-card {
-            background: rgba(30, 41, 59, 0.8);
-            border-radius: 1rem;
+        
+        /* Recommended ads widget - styled like content cards */
+        .ad-banner.recommended {
+            margin: 30px 0;
+            min-height: 200px;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 12px;
+            position: relative;
             overflow: hidden;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: 1px solid #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(51, 65, 85, 0.8);
+            transition: all 0.3s ease;
         }
-
-        .content-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            border-color: #3b82f6;
+        
+        .ad-banner.recommended:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
         }
-
-        .card-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            background: linear-gradient(45deg, #334155, #475569);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #94a3b8;
-        }
-
-        .card-content {
-            padding: 1rem;
-        }
-
-        .card-title {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #e2e8f0;
-        }
-
-        .card-info {
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #1e293b;
-            border-radius: 1rem;
-            max-width: 800px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            border: 1px solid #334155;
-        }
-
-        .modal-header {
-            padding: 2rem;
-            border-bottom: 1px solid #334155;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-body {
-            padding: 2rem;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 0.25rem;
-            transition: color 0.3s;
-        }
-
-        .close-btn:hover {
-            color: #e2e8f0;
-        }
-
-        .video-container {
-            width: 100%;
-            height: 400px;
-            margin-bottom: 1rem;
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-
-        .video-player {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .episodes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .episode-card {
-            background: rgba(15, 23, 42, 0.8);
-            border-radius: 0.5rem;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid #334155;
-        }
-
-        .episode-card:hover {
-            background: rgba(59, 130, 246, 0.1);
-            border-color: #3b82f6;
-        }
-
-        .auth-modal .modal-content {
-            max-width: 400px;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #e2e8f0;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #475569;
-            border-radius: 0.5rem;
-            background: rgba(30, 41, 59, 0.8);
-            color: #e2e8f0;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #94a3b8;
-        }
-
-        .spinner {
-            border: 3px solid #334155;
-            border-top: 3px solid #3b82f6;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 1rem auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .season-selector {
-            display: flex;
-            gap: 0.5rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-        }
-
-        .season-btn {
-            padding: 0.5rem 1rem;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid #475569;
-            border-radius: 0.5rem;
-            color: #e2e8f0;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .season-btn:hover, .season-btn.active {
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            border-color: #3b82f6;
-        }
-
-        .user-menu {
-            position: relative;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .dropdown {
+        
+        .ad-banner.recommended::before {
+            content: 'Sponsored';
             position: absolute;
-            top: 100%;
+            top: 12px;
+            right: 12px;
+            background: rgba(251, 191, 36, 0.9);
+            color: #1e293b;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10;
+        }
+        
+        .ad-banner.recommended::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
             right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 0%, rgba(59, 130, 246, 0.1) 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .ad-banner.recommended:hover::after {
+            opacity: 1;
+        }
+        
+        .sidebar-ad {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            width: 160px;
+            height: 600px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .sidebar-ad.left {
+            left: 10px;
+        }
+        
+        .sidebar-ad.right {
+            right: 10px;
+        }
+        
+        /* Adjust main content to accommodate sidebar ads */
+        .main-content {
+            margin: 0 180px;
+            padding: 20px;
+        }
+        
+        /* Make sidebar ads more visible */
+        .sidebar-ad::before {
+            content: 'Advertisement';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .disclaimer {
             background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 0.5rem;
-            margin-top: 0.5rem;
-            min-width: 200px;
-            display: none;
+            color: #94a3b8;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.6;
+            border-top: 1px solid #334155;
         }
-
-        .dropdown.active {
-            display: block;
+        
+        .disclaimer h4 {
+            color: #f1f5f9;
+            margin-bottom: 10px;
         }
-
-        .dropdown a {
-            display: block;
-            padding: 0.75rem 1rem;
-            color: #e2e8f0;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-
-        .dropdown a:hover {
-            background: rgba(59, 130, 246, 0.1);
-        }
-
-        .watchlist-btn {
-            background: rgba(59, 130, 246, 0.2);
-            border: 1px solid #3b82f6;
-            color: #3b82f6;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            margin: 0.5rem 0;
-            transition: all 0.3s;
-        }
-
-        .watchlist-btn:hover {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .watchlist-btn.added {
-            background: #10b981;
-            border-color: #10b981;
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
+        
+        /* Responsive design for ads */
+        @media (max-width: 1200px) {
+            .sidebar-ad {
                 display: none;
             }
             
-            .hero h1 {
-                font-size: 2rem;
+            .main-content {
+                margin: 0 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .ad-banner {
+                min-height: 60px;
             }
             
-            .content-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 1rem;
-            }
-            
-            .search-bar {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .search-input, .search-btn {
-                border-radius: 0.5rem;
+            .ad-banner.recommended {
+                min-height: 80px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Left Sidebar Ad -->
+    <div class="sidebar-ad left">
+        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script> 
+        <ins class="eas6a97888e2" data-zoneid="5644244"></ins> 
+        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+    </div>
+
+    <!-- Right Sidebar Ad -->
+    <div class="sidebar-ad right">
+        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script> 
+        <ins class="eas6a97888e2" data-zoneid="5644246"></ins> 
+        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -525,6 +200,13 @@
         </div>
     </nav>
 
+    <!-- Top Ad Banner -->
+    <div class="ad-banner top">
+        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script> 
+        <ins class="eas6a97888e2" data-zoneid="5644240"></ins> 
+        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+    </div>
+
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
@@ -548,6 +230,13 @@
                 </div>
             </section>
 
+            <!-- Recommended Ads Widget - Positioned between hero and content -->
+            <div class="ad-banner recommended">
+                <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script> 
+                <ins class="eas6a97888e20" data-zoneid="5665952"></ins> 
+                <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+            </div>
+
             <!-- Content Grid -->
             <section id="contentSection">
                 <div id="loadingSpinner" class="loading">
@@ -559,6 +248,13 @@
         </div>
     </main>
 
+    <!-- Bottom Ad Banner -->
+    <div class="ad-banner bottom">
+        <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script> 
+        <ins class="eas6a97888e2" data-zoneid="5644242"></ins> 
+        <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
+    </div>
+
     <!-- Content Detail Modal -->
     <div id="contentModal" class="modal">
         <div class="modal-content">
@@ -567,10 +263,26 @@
                 <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div id="videoContainer" class="video-container" style="display: none;">
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div id="videoPlayerModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 id="playerTitle">Now Playing</h2>
+                <button class="close-btn" onclick="closeVideoPlayer()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="video-container">
                     <iframe id="videoPlayer" class="video-player" allowfullscreen></iframe>
                 </div>
-                <div id="modalContent"></div>
+                <div id="playerControls" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+                    <button id="prevEpisodeBtn" class="btn btn-secondary" style="display: none;" onclick="prevEpisode()">← Previous</button>
+                    <button id="nextEpisodeBtn" class="btn btn-primary" style="display: none;" onclick="nextEpisode()">Next →</button>
+                </div>
             </div>
         </div>
     </div>
@@ -596,6 +308,7 @@
                         <span id="authButtonText">Login</span>
                     </button>
                 </form>
+                <div id="authExtraLinks" style="margin-top: 1rem; text-align: center;"></div>
                 <p style="text-align: center; margin-top: 1rem; color: #94a3b8;">
                     <span id="authSwitchText">Don't have an account?</span>
                     <a href="#" id="authSwitch" style="color: #3b82f6;">Register</a>
@@ -604,880 +317,198 @@
         </div>
     </div>
 
+    <!-- Disclaimer Section -->
+    <footer class="disclaimer">
+        <h4>Important Disclaimer</h4>
+        <p>
+            Streamlyst does not host any video content on our servers. All movies, TV shows, and anime are hosted by third-party providers and streaming services. 
+            We are not responsible for the content, quality, or availability of any media files. All content is sourced from publicly available streaming platforms and services. 
+            If you are the owner of any content and wish to have it removed, please contact us directly.
+        </p>
+        <p style="margin-top: 10px; font-size: 12px; opacity: 0.8;">
+            By using this platform, you acknowledge that you understand and agree to these terms. 
+            Streamlyst is a content discovery platform that aggregates links to publicly available streaming content.
+        </p>
+    </footer>
+
+    <!-- Ad Block Detection and Blocking -->
+    <div id="adBlockerOverlay" style="display: none;">
+        <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: Arial, sans-serif;
+        ">
+            <div style="
+                text-align: center;
+                max-width: 500px;
+                padding: 40px;
+                background: rgba(255,255,255,0.1);
+                border-radius: 20px;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255,255,255,0.2);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            ">
+                <div style="font-size: 60px; margin-bottom: 20px;">🚫</div>
+                <h2 style="margin: 0 0 20px 0; font-size: 28px; color: #f8fafc;">Ad Blocker Detected</h2>
+                <p style="margin: 0 0 25px 0; font-size: 16px; line-height: 1.6; color: #cbd5e1;">
+                    We've detected that you're using an ad blocker. This site is supported by advertisements, 
+                    which help us provide free content to all users.
+                </p>
+                <div style="
+                    background: rgba(239, 68, 68, 0.1);
+                    border: 1px solid rgba(239, 68, 68, 0.3);
+                    border-radius: 10px;
+                    padding: 20px;
+                    margin: 20px 0;
+                ">
+                    <p style="margin: 0; font-size: 14px; color: #fca5a5;">
+                        <strong>Access Blocked:</strong> Please disable your ad blocker to continue using Streamlyst.
+                    </p>
+                </div>
+                <div style="margin-top: 30px;">
+                    <h3 style="font-size: 18px; margin: 0 0 15px 0; color: #f1f5f9;">How to disable your ad blocker:</h3>
+                    <div style="text-align: left; font-size: 14px; line-height: 1.8; color: #e2e8f0;">
+                        <p style="margin: 10px 0;"><strong>• uBlock Origin:</strong> Click the shield icon → Click the power button</p>
+                        <p style="margin: 10px 0;"><strong>• Adblock Plus:</strong> Click the ABP icon → Toggle "Enabled on this site"</p>
+                        <p style="margin: 10px 0;"><strong>• AdGuard:</strong> Click the AdGuard icon → Toggle protection off</p>
+                        <p style="margin: 10px 0;"><strong>• Brave Browser:</strong> Click the Brave shield → Turn off "Block ads"</p>
+                    </div>
+                </div>
+                <button onclick="checkAdBlocker()" style="
+                    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+                    color: white;
+                    border: none;
+                    padding: 15px 30px;
+                    border-radius: 25px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    margin-top: 25px;
+                    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+                    transition: transform 0.2s;
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    I've Disabled My Ad Blocker
+                </button>
+                <p style="margin: 20px 0 0 0; font-size: 12px; color: #94a3b8;">
+                    After disabling, click the button above to continue
+                </p>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Configuration
-        const CONFIG = {
-            TMDB_API_KEY: 'fc5229ddcee9e96a1be1b8f8535063a3', // Replace with your TMDB API key
-            TMDB_BASE_URL: 'https://api.themoviedb.org/3',
-            TMDB_IMAGE_BASE_URL: 'https://image.tmdb.org/t/p/w500',
-            ANILIST_API_URL: 'https://graphql.anilist.co',
-            SUPABASE_URL: 'https://mxqvyptzqueqltyqogyk.supabase.co', // Replace with your Supabase URL
-            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14cXZ5cHR6cXVlcWx0eXFvZ3lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMDY1OTgsImV4cCI6MjA2NjY4MjU5OH0.96gJO6hi8Bmhn4ak2WYFX-elAJGkALfVfGGm_BGMUeI', // Replace with your Supabase anon key
-            VIDSRC_BASE_URL: 'https://vidsrc.cc/v2/embed'
-        };
-
-        // Global variables
-        let currentUser = null;
-        let currentContent = null;
-        let currentCategory = 'trending';
-        let watchlist = [];
-
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check for existing user session
-            const savedUser = localStorage.getItem('streamlyst_user');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                updateAuthUI();
-                loadWatchlist();
-            }
+        // Aggressive ad block detection and blocking
+        function detectAndBlockAdBlocker() {
+            let adBlockerDetected = false;
             
-            // Load initial content
-            loadTrendingContent();
-            
-            // Setup search
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
-            });
-        });
-
-        // Authentication functions
-        function showAuthModal(type) {
-            const modal = document.getElementById('authModal');
-            const title = document.getElementById('authTitle');
-            const buttonText = document.getElementById('authButtonText');
-            const switchText = document.getElementById('authSwitchText');
-            const switchLink = document.getElementById('authSwitch');
-            
-            if (type === 'login') {
-                title.textContent = 'Login';
-                buttonText.textContent = 'Login';
-                switchText.textContent = "Don't have an account?";
-                switchLink.textContent = 'Register';
-                switchLink.onclick = () => showAuthModal('register');
-            } else {
-                title.textContent = 'Register';
-                buttonText.textContent = 'Register';
-                switchText.textContent = 'Already have an account?';
-                switchLink.textContent = 'Login';
-                switchLink.onclick = () => showAuthModal('login');
-            }
-            
-            modal.classList.add('active');
-            
-            // Setup form submission
-            document.getElementById('authForm').onsubmit = (e) => {
-                e.preventDefault();
-                handleAuth(type);
-            };
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').classList.remove('active');
-            document.getElementById('authForm').reset();
-        }
-
-        function handleAuth(type) {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Simulate authentication (replace with real Supabase auth)
-            if (type === 'register') {
-                // Simulate user creation
-                currentUser = {
-                    id: Date.now().toString(),
-                    email: email,
-                    created_at: new Date().toISOString()
-                };
-                localStorage.setItem('streamlyst_user', JSON.stringify(currentUser));
-                updateAuthUI();
-                closeAuthModal();
-                showSuccessMessage('Account created successfully!');
-            } else {
-                // Simulate login
-                currentUser = {
-                    id: '12345',
-                    email: email,
-                    created_at: new Date().toISOString()
-                };
-                localStorage.setItem('streamlyst_user', JSON.stringify(currentUser));
-                updateAuthUI();
-                loadWatchlist();
-                closeAuthModal();
-                showSuccessMessage('Logged in successfully!');
-            }
-        }
-
-        function logout() {
-            currentUser = null;
-            watchlist = [];
-            localStorage.removeItem('streamlyst_user');
-            localStorage.removeItem('streamlyst_watchlist');
-            updateAuthUI();
-            toggleDropdown();
-            showSuccessMessage('Logged out successfully!');
-        }
-
-        function updateAuthUI() {
-            const authButtons = document.getElementById('authButtons');
-            const userMenu = document.getElementById('userMenu');
-            const userInitial = document.getElementById('userInitial');
-            
-            if (currentUser) {
-                authButtons.style.display = 'none';
-                userMenu.style.display = 'block';
-                userInitial.textContent = currentUser.email.charAt(0).toUpperCase();
-            } else {
-                authButtons.style.display = 'flex';
-                userMenu.style.display = 'none';
-            }
-        }
-
-        function toggleDropdown() {
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.classList.toggle('active');
-        }
-
-        // Content loading functions
-        async function loadTrendingContent() {
-            showLoading();
-            try {
-                const response = await fetch(`${CONFIG.TMDB_BASE_URL}/trending/all/week?api_key=${CONFIG.TMDB_API_KEY}`);
-                const data = await response.json();
-                displayContent(data.results);
-            } catch (error) {
-                console.error('Error loading trending content:', error);
-                showError('Failed to load trending content');
-            }
-        }
-
-        async function loadMovies() {
-            showLoading();
-            try {
-                const response = await fetch(`${CONFIG.TMDB_BASE_URL}/movie/popular?api_key=${CONFIG.TMDB_API_KEY}`);
-                const data = await response.json();
-                // Filter out anime content from the TMDB results
-                const filteredMovies = data.results.filter(item => item.media_type !== 'anime');
-                displayContent(filteredMovies, 'movie');
-            } catch (error) {
-                console.error('Error loading movies:', error);
-                showError('Failed to load movies');
-            }
-        }
-
-
-        async function loadTVShows() {
-          showLoading();
-          try {
-              const response = await fetch(`${CONFIG.TMDB_BASE_URL}/tv/popular?api_key=${CONFIG.TMDB_API_KEY}`);
-              const data = await response.json();
-              // Filter out anime content from the TMDB results
-              const filteredTVShows = data.results.filter(item => item.media_type !== 'anime');
-              displayContent(filteredTVShows, 'tv');
-          } catch (error) {
-              console.error('Error loading TV shows:', error);
-              showError('Failed to load TV shows');
-          }
-      }
-
-
-        async function loadAnime() {
-            showLoading();
-            try {
-                const query = `
-                    query {
-                        Page(page: 1, perPage: 20) {
-                            media(type: ANIME, sort: POPULARITY_DESC) {
-                                id
-                                title {
-                                    romaji
-                                    english
-                                }
-                                coverImage {
-                                    large
-                                }
-                                description
-                                episodes
-                                status
-                                genres
-                                averageScore
-                            }
-                        }
-                    }
-                `;
-                
-                const response = await fetch(CONFIG.ANILIST_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ query })
-                });
-                
-                const data = await response.json();
-                displayAnimeContent(data.data.Page.media);
-            } catch (error) {
-                console.error('Error loading anime:', error);
-                showError('Failed to load anime');
-            }
-        }
-
-        function displayContent(content, type = null) {
-            const grid = document.getElementById('contentGrid');
-            const loading = document.getElementById('loadingSpinner');
-            
-            loading.style.display = 'none';
-            grid.innerHTML = '';
-            
-            content.forEach(item => {
-                const contentType = type || (item.media_type || (item.title ? 'movie' : 'tv'));
-                const card = createContentCard(item, contentType);
-                grid.appendChild(card);
-            });
-        }
-
-        function displayAnimeContent(content) {
-            const grid = document.getElementById('contentGrid');
-            const loading = document.getElementById('loadingSpinner');
-            
-            loading.style.display = 'none';
-            grid.innerHTML = '';
-            
-            content.forEach(item => {
-                const card = createAnimeCard(item);
-                grid.appendChild(card);
-            });
-        }
-
-        function createContentCard(item, type) {
-            const card = document.createElement('div');
-            card.className = 'content-card';
-            
-            const title = item.title || item.name;
-            const poster = item.poster_path ? `${CONFIG.TMDB_IMAGE_BASE_URL}${item.poster_path}` : null;
-            const year = item.release_date || item.first_air_date ? new Date(item.release_date || item.first_air_date).getFullYear() : 'N/A';
-            const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
-            
-            card.innerHTML = `
-                ${poster ? 
-                    `<img src="${poster}" alt="${title}" class="card-image">` : 
-                    `<div class="card-image">No Image Available</div>`
-                }
-                <div class="card-content">
-                    <div class="card-title">${title}</div>
-                    <div class="card-info">${year} • ⭐ ${rating}</div>
-                </div>
-            `;
-            
-            card.onclick = () => showContentDetail(item, type);
-            return card;
-        }
-
-        function createAnimeCard(item) {
-            const card = document.createElement('div');
-            card.className = 'content-card';
-            
-            const title = item.title.english || item.title.romaji;
-            const poster = item.coverImage.large;
-            const episodes = item.episodes || 'N/A';
-            const score = item.averageScore ? (item.averageScore / 10).toFixed(1) : 'N/A';
-            
-            card.innerHTML = `
-                <img src="${poster}" alt="${title}" class="card-image">
-                <div class="card-content">
-                    <div class="card-title">${title}</div>
-                    <div class="card-info">${episodes} eps • ⭐ ${score}</div>
-                </div>
-            `;
-            
-            card.onclick = () => showAnimeDetail(item);
-            return card;
-        }
-
-        // Content detail functions
-        async function showContentDetail(content, type) {
-            currentContent = { ...content, type };
-            const modal = document.getElementById('contentModal');
-            const title = document.getElementById('modalTitle');
-            const modalContent = document.getElementById('modalContent');
-            
-            title.textContent = content.title || content.name;
-            modal.classList.add('active');
-            
-            try {
-                let detailData;
-                if (type === 'movie') {
-                    const response = await fetch(`${CONFIG.TMDB_BASE_URL}/movie/${content.id}?api_key=${CONFIG.TMDB_API_KEY}`);
-                    detailData = await response.json();
-                } else {
-                    const response = await fetch(`${CONFIG.TMDB_BASE_URL}/tv/${content.id}?api_key=${CONFIG.TMDB_API_KEY}`);
-                    detailData = await response.json();
-                }
-                
-                await displayContentDetail(detailData, type);
-            } catch (error) {
-                console.error('Error loading content details:', error);
-                modalContent.innerHTML = '<p>Failed to load content details</p>';
-            }
-        }
-
-        async function showAnimeDetail(anime) {
-            currentContent = { ...anime, type: 'anime' };
-            const modal = document.getElementById('contentModal');
-            const title = document.getElementById('modalTitle');
-            
-            title.textContent = anime.title.english || anime.title.romaji;
-            modal.classList.add('active');
-            
-            displayAnimeDetail(anime);
-        }
-
-        async function displayContentDetail(content, type) {
-            const modalContent = document.getElementById('modalContent');
-            const isInWatchlist = watchlist.some(item => item.id === content.id && item.type === type);
-            
-            let html = `
-                <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
-                    <img src="${content.poster_path ? CONFIG.TMDB_IMAGE_BASE_URL + content.poster_path : ''}" 
-                         alt="${content.title || content.name}" 
-                         style="width: 200px; height: 300px; object-fit: cover; border-radius: 0.5rem;">
-                    <div style="flex: 1;">
-                        <h3>${content.title || content.name}</h3>
-                        <p style="color: #94a3b8; margin: 1rem 0;">${content.overview}</p>
-                        <div style="display: flex; gap: 1rem; margin: 1rem 0;">
-                            <span>⭐ ${content.vote_average ? content.vote_average.toFixed(1) : 'N/A'}</span>
-                            <span>📅 ${content.release_date || content.first_air_date || 'N/A'}</span>
-                            ${content.runtime ? `<span>⏱️ ${content.runtime}min</span>` : ''}
-                        </div>
-                        <div style="margin: 1rem 0;">
-                            <button class="btn btn-primary" onclick="playContent('${content.id}', '${type}', 1, 1)" style="margin-right: 1rem;">
-                                ▶️ Play ${type === 'movie' ? 'Movie' : 'Episode 1'}
-                            </button>
-                            <button class="watchlist-btn ${isInWatchlist ? 'added' : ''}" onclick="toggleWatchlist(${content.id}, '${type}')">
-                                ${isInWatchlist ? '✓ In Watchlist' : '+ Add to Watchlist'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            if (type === 'tv') {
-                html += await loadTVSeasons(content.id);
-            }
-            
-            modalContent.innerHTML = html;
-        }
-
-        function displayAnimeDetail(anime) {
-            const modalContent = document.getElementById('modalContent');
-            const isInWatchlist = watchlist.some(item => item.id === anime.id && item.type === 'anime');
-            
-            const description = anime.description ? anime.description.replace(/<[^>]*>/g, '') : 'No description available';
-            
-            modalContent.innerHTML = `
-                <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
-                    <img src="${anime.coverImage.large}" 
-                         alt="${anime.title.english || anime.title.romaji}" 
-                         style="width: 200px; height: 300px; object-fit: cover; border-radius: 0.5rem;">
-                    <div style="flex: 1;">
-                        <h3>${anime.title.english || anime.title.romaji}</h3>
-                        <p style="color: #94a3b8; margin: 1rem 0;">${description}</p>
-                        <div style="display: flex; gap: 1rem; margin: 1rem 0;">
-                            <span>⭐ ${anime.averageScore ? (anime.averageScore / 10).toFixed(1) : 'N/A'}</span>
-                            <span>📺 ${anime.episodes || 'N/A'} episodes</span>
-                            <span>📊 ${anime.status}</span>
-                        </div>
-                        <div style="margin: 1rem 0;">
-                            <span style="color: #3b82f6; margin-right: 1rem;">Genres: ${anime.genres.join(', ')}</span>
-                        </div>
-                        <div style="margin: 1rem 0;">
-                            <button class="btn btn-primary" onclick="playAnime('${anime.id}', 1)" style="margin-right: 1rem;">
-                                ▶️ Play Episode 1
-                            </button>
-                            <button class="watchlist-btn ${isInWatchlist ? 'added' : ''}" onclick="toggleWatchlist(${anime.id}, 'anime')">
-                                ${isInWatchlist ? '✓ In Watchlist' : '+ Add to Watchlist'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                ${loadAnimeEpisodes(anime)}
-            `;
-        }
-
-        async function loadTVSeasons(tvId) {
-            try {
-                const response = await fetch(`${CONFIG.TMDB_BASE_URL}/tv/${tvId}?api_key=${CONFIG.TMDB_API_KEY}`);
-                const data = await response.json();
-                
-                if (!data.seasons || data.seasons.length === 0) {
-                    return '<p>No seasons available</p>';
-                }
-                
-                let html = '<h4>Seasons</h4><div class="season-selector">';
-                
-                data.seasons.forEach((season, index) => {
-                    if (season.season_number > 0) {
-                        html += `<button class="season-btn ${index === 0 ? 'active' : ''}" onclick="loadSeason(${tvId}, ${season.season_number}, event)">
-                            Season ${season.season_number}
-                        </button>`;
-                    }
-                });
-                
-                html += '</div><div id="episodesContainer"></div>';
-                
-                // Load first season by default
-                setTimeout(() => {
-                    if (data.seasons.length > 0) {
-                        const firstSeason = data.seasons.find(s => s.season_number > 0);
-                        if (firstSeason) {
-                            loadSeason(tvId, firstSeason.season_number, null);
-                        }
-                    }
-                }, 100);
-                
-                return html;
-            } catch (error) {
-                console.error('Error loading seasons:', error);
-                return '<p>Failed to load seasons</p>';
-            }
-        }
-
-
-        async function loadSeason(tvId, seasonNumber, event) {
-            try {
-                const response = await fetch(`${CONFIG.TMDB_BASE_URL}/tv/${tvId}/season/${seasonNumber}?api_key=${CONFIG.TMDB_API_KEY}`);
-                const data = await response.json();
-                
-                // Update active season button
-                document.querySelectorAll('.season-btn').forEach(btn => btn.classList.remove('active'));
-                if (event) {
-                    event.target.classList.add('active');
-                }
-                
-                let html = '<div class="episodes-grid">';
-                
-                data.episodes.forEach(episode => {
-                    const thumbnail = episode.still_path ? `${CONFIG.TMDB_IMAGE_BASE_URL}${episode.still_path}` : '';
-                    html += `
-                        <div class="episode-card" onclick="playContent('${tvId}', 'tv', ${seasonNumber}, ${episode.episode_number})">
-                            ${thumbnail ? `<img src="${thumbnail}" alt="Episode ${episode.episode_number}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 0.25rem; margin-bottom: 0.5rem;">` : ''}
-                            <h5>Episode ${episode.episode_number}: ${episode.name}</h5>
-                            <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem;">${episode.overview || 'No description available'}</p>
-                            <div style="margin-top: 0.5rem; color: #64748b; font-size: 0.8rem;">
-                                ${episode.air_date ? `📅 ${episode.air_date}` : ''} 
-                                ${episode.runtime ? `⏱️ ${episode.runtime}min` : ''}
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                html += '</div>';
-                document.getElementById('episodesContainer').innerHTML = html;
-            } catch (error) {
-                console.error('Error loading season:', error);
-                document.getElementById('episodesContainer').innerHTML = '<p>Failed to load episodes</p>';
-            }
-        }
-
-
-        function loadAnimeEpisodes(anime) {
-            if (!anime.episodes || anime.episodes === 0) {
-                return '<p>No episodes available</p>';
-            }
-            
-            let html = '<h4>Episodes</h4><div class="episodes-grid">';
-            
-            for (let i = 1; i <= Math.min(anime.episodes, 50); i++) {
-                html += `
-                    <div class="episode-card" onclick="playAnime('${anime.id}', ${i})">
-                        <h5>Episode ${i}</h5>
-                        <p style="color: #94a3b8; font-size: 0.9rem;">Click to watch episode ${i}</p>
-                    </div>
-                `;
-            }
-            
-            html += '</div>';
-            return html;
-        }
-
-        // Video player functions
-        function playContent(id, type, season = 1, episode = 1) {
-            const videoContainer = document.getElementById('videoContainer');
-            const videoPlayer = document.getElementById('videoPlayer');
-            
-            let embedUrl;
-            if (type === 'movie') {
-                embedUrl = `${CONFIG.VIDSRC_BASE_URL}/movie/${id}`;
-            } else if (type === 'tv') {
-                embedUrl = `${CONFIG.VIDSRC_BASE_URL}/tv/${id}/${season}/${episode}`;
-            }
-            
-            videoPlayer.src = embedUrl;
-            videoContainer.style.display = 'block';
-            videoContainer.scrollIntoView({ behavior: 'smooth' });
-            
-            // Track progress
-            if (currentUser) {
-                trackProgress(id, type, season, episode);
-            }
-        }
-
-        function playAnime(id, episode) {
-            const videoContainer = document.getElementById('videoContainer');
-            const videoPlayer = document.getElementById('videoPlayer');
-            
-            // For anime, we'll use a different approach since vidsrc.cc might not have anime
-            // You can integrate with other anime streaming sources here
-            const embedUrl = `${CONFIG.VIDSRC_BASE_URL}/anime/ani${id}/1/${episode}`;
-            
-            videoPlayer.src = embedUrl;
-            videoContainer.style.display = 'block';
-            videoContainer.scrollIntoView({ behavior: 'smooth' });
-            
-            // Track progress
-            if (currentUser) {
-                trackProgress(id, 'anime', 1, episode);
-            }
-        }
-
-        // Search functionality
-        async function performSearch() {
-            const query = document.getElementById('searchInput').value.trim();
-            if (!query) return;
-            
-            showLoading();
-            
-            try {
-                // Search movies and TV shows
-                const tmdbResponse = await fetch(`${CONFIG.TMDB_BASE_URL}/search/multi?api_key=${CONFIG.TMDB_API_KEY}&query=${encodeURIComponent(query)}`);
-                const tmdbData = await tmdbResponse.json();
-                
-                // Search anime
-                const animeQuery = `
-                    query ($search: String) {
-                        Page(page: 1, perPage: 10) {
-                            media(search: $search, type: ANIME) {
-                                id
-                                title {
-                                    romaji
-                                    english
-                                }
-                                coverImage {
-                                    large
-                                }
-                                description
-                                episodes
-                                status
-                                genres
-                                averageScore
-                            }
-                        }
-                    }
-                `;
-                
-                const animeResponse = await fetch(CONFIG.ANILIST_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        query: animeQuery,
-                        variables: { search: query }
-                    })
-                });
-                
-                const animeData = await animeResponse.json();
-                
-                // Combine and display results
-                const combinedResults = [
-                    ...tmdbData.results.map(item => ({ ...item, source: 'tmdb' })),
-                    ...animeData.data.Page.media.map(item => ({ ...item, source: 'anilist' }))
-                ];
-                
-                displaySearchResults(combinedResults);
-            } catch (error) {
-                console.error('Error performing search:', error);
-                showError('Search failed. Please try again.');
-            }
-        }
-
-        function displaySearchResults(results) {
-            const grid = document.getElementById('contentGrid');
-            const loading = document.getElementById('loadingSpinner');
-            
-            loading.style.display = 'none';
-            grid.innerHTML = '';
-            
-            if (results.length === 0) {
-                grid.innerHTML = '<p style="text-align: center; color: #94a3b8; grid-column: 1 / -1;">No results found</p>';
-                return;
-            }
-            
-            results.forEach(item => {
-                let card;
-                if (item.source === 'anilist') {
-                    card = createAnimeCard(item);
-                } else {
-                    const type = item.media_type || (item.title ? 'movie' : 'tv');
-                    card = createContentCard(item, type);
-                }
-                grid.appendChild(card);
-            });
-        }
-
-        // Category functions
-        function showCategory(category) {
-            currentCategory = category;
-            
-            // Update active category button
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            switch (category) {
-                case 'trending':
-                    loadTrendingContent();
-                    break;
-                case 'movies':
-                    loadMovies();
-                    break;
-                case 'tv':
-                    loadTVShows();
-                    break;
-                case 'anime':
-                    loadAnime();
-                    break;
-            }
-        }
-
-        function showHome() {
-            currentCategory = 'trending';
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector('.category-btn').classList.add('active');
-            loadTrendingContent();
-        }
-
-        // Watchlist functions
-        function toggleWatchlist(contentId, type) {
-            if (!currentUser) {
-                showAuthModal('login');
-                return;
-            }
-            
-            const existingIndex = watchlist.findIndex(item => item.id === contentId && item.type === type);
-            
-            if (existingIndex > -1) {
-                watchlist.splice(existingIndex, 1);
-                showSuccessMessage('Removed from watchlist');
-            } else {
-                const content = {
-                    id: contentId,
-                    type: type,
-                    title: currentContent.title || currentContent.name || (currentContent.title && (currentContent.title.english || currentContent.title.romaji)),
-                    poster: currentContent.poster_path || currentContent.coverImage?.large,
-                    added_at: new Date().toISOString()
-                };
-                watchlist.push(content);
-                showSuccessMessage('Added to watchlist');
-            }
-            
-            saveWatchlist();
-            
-            // Update button text
-            const button = event.target;
-            const isInWatchlist = watchlist.some(item => item.id === contentId && item.type === type);
-            button.textContent = isInWatchlist ? '✓ In Watchlist' : '+ Add to Watchlist';
-            button.classList.toggle('added', isInWatchlist);
-        }
-
-        function showWatchlist() {
-            if (!currentUser) {
-                showAuthModal('login');
-                return;
-            }
-            
-            const grid = document.getElementById('contentGrid');
-            const loading = document.getElementById('loadingSpinner');
-            
-            loading.style.display = 'none';
-            grid.innerHTML = '';
-            
-            if (watchlist.length === 0) {
-                grid.innerHTML = '<p style="text-align: center; color: #94a3b8; grid-column: 1 / -1;">Your watchlist is empty</p>';
-                return;
-            }
-            
-            watchlist.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'content-card';
-                
-                card.innerHTML = `
-                    ${item.poster ? 
-                        `<img src="${item.poster.startsWith('http') ? item.poster : CONFIG.TMDB_IMAGE_BASE_URL + item.poster}" alt="${item.title}" class="card-image">` : 
-                        `<div class="card-image">No Image</div>`
-                    }
-                    <div class="card-content">
-                        <div class="card-title">${item.title}</div>
-                        <div class="card-info">${item.type.toUpperCase()} • Added ${new Date(item.added_at).toLocaleDateString()}</div>
-                        <button class="btn btn-secondary" onclick="removeFromWatchlist(${item.id}, '${item.type}')" style="margin-top: 0.5rem; width: 100%;">
-                            Remove
-                        </button>
-                    </div>
-                `;
-                
-                // Add click handler for the card (excluding the button)
-                card.addEventListener('click', (e) => {
-                    if (!e.target.closest('button')) {
-                        if (item.type === 'anime') {
-                            showAnimeDetail(item);
-                        } else {
-                            showContentDetail(item, item.type);
-                        }
-                    }
-                });
-                
-                grid.appendChild(card);
-            });
-        }
-
-        function removeFromWatchlist(contentId, type) {
-            const index = watchlist.findIndex(item => item.id === contentId && item.type === type);
-            if (index > -1) {
-                watchlist.splice(index, 1);
-                saveWatchlist();
-                showWatchlist(); // Refresh the display
-                showSuccessMessage('Removed from watchlist');
-            }
-        }
-
-        function loadWatchlist() {
-            const saved = localStorage.getItem('streamlyst_watchlist');
-            if (saved) {
-                watchlist = JSON.parse(saved);
-            }
-        }
-
-        function saveWatchlist() {
-            localStorage.setItem('streamlyst_watchlist', JSON.stringify(watchlist));
-        }
-
-        // Progress tracking
-        function trackProgress(contentId, type, season, episode) {
-            if (!currentUser) return;
-            
-            const progressKey = `progress_${currentUser.id}`;
-            let progress = JSON.parse(localStorage.getItem(progressKey) || '{}');
-            
-            const key = `${type}_${contentId}`;
-            progress[key] = {
-                contentId,
-                type,
-                season,
-                episode,
-                timestamp: Date.now(),
-                updated_at: new Date().toISOString()
-            };
-            
-            localStorage.setItem(progressKey, JSON.stringify(progress));
-        }
-
-        // Utility functions
-        function showLoading() {
-            document.getElementById('loadingSpinner').style.display = 'block';
-            document.getElementById('contentGrid').innerHTML = '';
-        }
-
-        function showError(message) {
-            const grid = document.getElementById('contentGrid');
-            const loading = document.getElementById('loadingSpinner');
-            
-            loading.style.display = 'none';
-            grid.innerHTML = `<p style="text-align: center; color: #ef4444; grid-column: 1 / -1;">${message}</p>`;
-        }
-
-        function showSuccessMessage(message) {
-            // Create a simple toast notification
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(45deg, #10b981, #059669);
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: 0.5rem;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-                z-index: 9999;
-                animation: slideIn 0.3s ease;
-            `;
-            toast.textContent = message;
-            
-            document.body.appendChild(toast);
+            // Method 1: Test ad element
+            const adTest = document.createElement('div');
+            adTest.innerHTML = '&nbsp;';
+            adTest.className = 'adsbox ad-banner advertisement ads';
+            adTest.style.cssText = 'position: absolute !important; left: -10000px !important; width: 1px !important; height: 1px !important;';
+            document.body.appendChild(adTest);
             
             setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => {
-                    document.body.removeChild(toast);
-                }, 300);
-            }, 3000);
-        }
-
-        function closeModal() {
-            document.getElementById('contentModal').classList.remove('active');
-            document.getElementById('videoContainer').style.display = 'none';
-            document.getElementById('videoPlayer').src = '';
-        }
-
-        // Close modals when clicking outside
-        document.addEventListener('click', function(e) {
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                    if (modal.id === 'contentModal') {
-                        document.getElementById('videoContainer').style.display = 'none';
-                        document.getElementById('videoPlayer').src = '';
-                    }
+                if (adTest.offsetHeight === 0 || adTest.style.display === 'none' || adTest.style.visibility === 'hidden') {
+                    adBlockerDetected = true;
                 }
+                document.body.removeChild(adTest);
+                
+                // Method 2: Test ad script loading
+                const script = document.createElement('script');
+                script.src = 'https://a.magsrv.com/ad-provider.js';
+                script.onerror = function() {
+                    adBlockerDetected = true;
+                    showAdBlockerMessage();
+                };
+                
+                if (adBlockerDetected) {
+                    showAdBlockerMessage();
+                } else {
+                    // Double check after script attempts to load
+                    setTimeout(() => {
+                        if (typeof AdProvider === 'undefined') {
+                            showAdBlockerMessage();
+                        }
+                    }, 2000);
+                }
+                
+                document.head.appendChild(script);
+            }, 100);
+        }
+        
+        function showAdBlockerMessage() {
+            // Hide all page content
+            document.body.style.overflow = 'hidden';
+            const overlay = document.getElementById('adBlockerOverlay');
+            overlay.style.display = 'block';
+            
+            // Block right-click and keyboard shortcuts
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
             });
             
-            // Close user dropdown when clicking outside
-            if (!e.target.closest('.user-menu')) {
-                document.getElementById('userDropdown').classList.remove('active');
+            document.addEventListener('keydown', function(e) {
+                // Block F12, Ctrl+Shift+I, Ctrl+U, etc.
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+                    (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        }
+        
+        function checkAdBlocker() {
+            // Re-test for ad blocker
+            const adTest = document.createElement('div');
+            adTest.innerHTML = '&nbsp;';
+            adTest.className = 'adsbox';
+            adTest.style.cssText = 'position: absolute !important; left: -10000px !important; width: 1px !important; height: 1px !important;';
+            document.body.appendChild(adTest);
+            
+            setTimeout(() => {
+                if (adTest.offsetHeight > 0 && adTest.style.display !== 'none') {
+                    // Ad blocker seems to be disabled
+                    document.body.style.overflow = 'auto';
+                    document.getElementById('adBlockerOverlay').style.display = 'none';
+                    location.reload(); // Reload to load ads properly
+                } else {
+                    // Still blocked
+                    alert('Ad blocker is still active. Please make sure to disable it completely and refresh the page.');
+                }
+                document.body.removeChild(adTest);
+            }, 100);
+        }
+        
+        // Initialize detection immediately
+        detectAndBlockAdBlocker();
+        
+        // Also check when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            detectAndBlockAdBlocker();
+        });
+        
+        // Block access if ad scripts fail to load
+        window.addEventListener('error', function(e) {
+            if (e.filename && e.filename.includes('magsrv.com')) {
+                showAdBlockerMessage();
             }
         });
-
-        // Add CSS animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            
-            @keyframes slideOut {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
 </body>
 </html>
