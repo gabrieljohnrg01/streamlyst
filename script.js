@@ -868,7 +868,7 @@ async function toggleWatchlist(contentId, type) {
     try {
         if (existingIndex > -1) {
             // Remove from watchlist
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('watchlist')
                 .delete()
                 .eq('id', watchlist[existingIndex].id);
@@ -888,7 +888,7 @@ async function toggleWatchlist(contentId, type) {
                 user_id: currentUser.id
             };
             
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient
                 .from('watchlist')
                 .insert([content])
                 .select();
@@ -969,7 +969,7 @@ async function showWatchlist() {
 
 async function removeFromWatchlist(watchlistId) {
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('watchlist')
             .delete()
             .eq('id', watchlistId);
@@ -989,7 +989,7 @@ async function loadWatchlist() {
     if (!currentUser) return;
     
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('watchlist')
             .select('*')
             .eq('user_id', currentUser.id);
@@ -1009,7 +1009,7 @@ async function trackProgress(contentId, type, season, episode) {
     
     try {
         // Check if progress already exists
-        const { data: existing, error: fetchError } = await supabase
+        const { data: existing, error: fetchError } = await supabaseClient
             .from('progress')
             .select('*')
             .eq('user_id', currentUser.id)
@@ -1021,7 +1021,7 @@ async function trackProgress(contentId, type, season, episode) {
         
         if (existing) {
             // Update existing progress
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('progress')
                 .update({
                     season,
@@ -1033,7 +1033,7 @@ async function trackProgress(contentId, type, season, episode) {
             if (error) throw error;
         } else {
             // Create new progress
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('progress')
                 .insert([{
                     user_id: currentUser.id,
