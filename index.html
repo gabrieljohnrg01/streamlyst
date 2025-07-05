@@ -26,56 +26,6 @@
             margin-top: 20px;
         }
         
-        /* Recommended ads widget - styled like content cards */
-        .ad-banner.recommended {
-            margin: 30px 0;
-            min-height: 200px;
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(51, 65, 85, 0.8);
-            transition: all 0.3s ease;
-        }
-        
-        .ad-banner.recommended:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-        }
-        
-        .ad-banner.recommended::before {
-            content: 'Sponsored';
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(251, 191, 36, 0.9);
-            color: #1e293b;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            z-index: 10;
-        }
-        
-        .ad-banner.recommended::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent 0%, rgba(59, 130, 246, 0.1) 50%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .ad-banner.recommended:hover::after {
-            opacity: 1;
-        }
-        
         .sidebar-ad {
             position: fixed;
             top: 50%;
@@ -134,7 +84,183 @@
             margin-bottom: 10px;
         }
         
-        /* Responsive design for ads */
+        /* Mobile Navigation Styles */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links.mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .nav-links.mobile-menu.active {
+            display: flex;
+        }
+        
+        .nav-links.mobile-menu a {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        .nav-links.mobile-menu a:last-child {
+            border-bottom: none;
+        }
+        
+        /* Mobile Search Bar */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 25px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 16px;
+        }
+        
+        .search-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        /* Mobile Categories */
+        .categories {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .category-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border-color: #3b82f6;
+        }
+        
+        /* Mobile Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            padding: 20px 0;
+        }
+        
+        /* Mobile Modal Styles */
+        .modal-content {
+            max-width: 95vw;
+            max-height: 90vh;
+            margin: 5vh auto;
+            overflow-y: auto;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        
+        .video-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+        }
+        
+        /* Mobile Auth Modal */
+        .auth-modal .modal-content {
+            max-width: 90vw;
+            margin: 10vh auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #f1f5f9;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        /* Mobile Player Controls */
+        #playerControls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            gap: 10px;
+        }
+        
+        #playerControls button {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+        }
+        
+        /* Responsive design for ads and layout */
         @media (max-width: 1200px) {
             .sidebar-ad {
                 display: none;
@@ -146,12 +272,282 @@
         }
         
         @media (max-width: 768px) {
-            .ad-banner {
-                min-height: 60px;
+            /* Hide desktop navigation, show mobile menu */
+            .nav-links:not(.mobile-menu) {
+                display: none;
             }
             
-            .ad-banner.recommended {
-                min-height: 80px;
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .navbar {
+                position: relative;
+            }
+            
+            .nav-container {
+                flex-wrap: wrap;
+                padding: 10px 20px;
+            }
+            
+            .logo {
+                font-size: 24px;
+            }
+            
+            .auth-section {
+                margin-left: auto;
+            }
+            
+            .auth-buttons {
+                gap: 10px;
+            }
+            
+            .auth-buttons button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            /* Main content adjustments */
+            .main-content {
+                margin: 0 10px;
+                padding: 10px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+            
+            /* Search bar mobile optimization */
+            .search-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-input {
+                width: 100%;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+            
+            .search-btn {
+                width: 100%;
+                padding: 15px;
+                font-size: 16px;
+            }
+            
+            /* Categories mobile optimization */
+            .categories {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding: 10px 0;
+                scroll-snap-type: x mandatory;
+            }
+            
+            .category-btn {
+                flex-shrink: 0;
+                scroll-snap-align: start;
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+            
+            /* Content grid mobile optimization */
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
+                padding: 10px 0;
+            }
+            
+            /* Ad banner mobile optimization */
+            .ad-banner {
+                min-height: 60px;
+                margin: 15px 0;
+            }
+            
+            /* Modal mobile optimization */
+            .modal-content {
+                max-width: 95vw;
+                margin: 2vh auto;
+                max-height: 96vh;
+            }
+            
+            .modal-header {
+                padding: 15px;
+            }
+            
+            .modal-body {
+                padding: 15px;
+            }
+            
+            .close-btn {
+                font-size: 24px;
+                padding: 5px 10px;
+            }
+            
+            /* Video player mobile optimization */
+            .video-container {
+                padding-bottom: 56.25%; /* Maintain 16:9 aspect ratio */
+            }
+            
+            #playerControls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            #playerControls button {
+                width: 100%;
+                padding: 15px;
+                font-size: 16px;
+            }
+            
+            /* Auth modal mobile optimization */
+            .auth-modal .modal-content {
+                max-width: 95vw;
+                margin: 5vh auto;
+            }
+            
+            .form-group input {
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+            
+            /* User menu mobile optimization */
+            .user-menu {
+                position: relative;
+            }
+            
+            .dropdown {
+                position: absolute;
+                right: 0;
+                top: 100%;
+                min-width: 150px;
+                background: rgba(30, 41, 59, 0.95);
+                backdrop-filter: blur(10px);
+                border-radius: 8px;
+                padding: 10px 0;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            }
+            
+            .dropdown a {
+                display: block;
+                padding: 12px 20px;
+                color: white;
+                text-decoration: none;
+                transition: background-color 0.3s;
+            }
+            
+            .dropdown a:hover {
+                background: rgba(255,255,255,0.1);
+            }
+            
+            /* Disclaimer mobile optimization */
+            .disclaimer {
+                padding: 15px;
+                font-size: 13px;
+            }
+            
+            .disclaimer h4 {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 10px 15px;
+            }
+            
+            .logo {
+                font-size: 20px;
+            }
+            
+            .main-content {
+                margin: 0 5px;
+                padding: 5px;
+            }
+            
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+            
+            .hero p {
+                font-size: 0.9rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 8px;
+            }
+            
+            .category-btn {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            
+            .search-input,
+            .search-btn {
+                font-size: 14px;
+            }
+            
+            .modal-content {
+                max-width: 98vw;
+                margin: 1vh auto;
+            }
+            
+            .auth-buttons button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+        
+        /* Touch optimization */
+        @media (hover: none) and (pointer: coarse) {
+            .category-btn,
+            .search-btn,
+            .btn {
+                min-height: 44px; /* Apple's recommended minimum touch target */
+            }
+            
+            .close-btn {
+                min-width: 44px;
+                min-height: 44px;
+            }
+            
+            .user-avatar {
+                min-width: 44px;
+                min-height: 44px;
+            }
+        }
+        
+        /* Landscape orientation adjustments */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+            
+            .hero p {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+            
+            .search-bar {
+                flex-direction: row;
+                gap: 10px;
+            }
+            
+            .search-btn {
+                width: auto;
+                padding: 12px 24px;
+            }
+            
+            .categories {
+                margin-bottom: 1rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             }
         }
     </style>
@@ -175,12 +571,20 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">Streamlyst</div>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
             <div class="nav-links">
                 <a href="#" onclick="showHome()">Home</a>
                 <a href="#" onclick="showCategory('movies')">Movies</a>
                 <a href="#" onclick="showCategory('tv')">TV Shows</a>
                 <a href="#" onclick="showCategory('anime')">Anime</a>
                 <a href="#" onclick="showWatchlist()">Watchlist</a>
+            </div>
+            <div class="nav-links mobile-menu" id="mobileMenu">
+                <a href="#" onclick="showHome(); closeMobileMenu()">Home</a>
+                <a href="#" onclick="showCategory('movies'); closeMobileMenu()">Movies</a>
+                <a href="#" onclick="showCategory('tv'); closeMobileMenu()">TV Shows</a>
+                <a href="#" onclick="showCategory('anime'); closeMobileMenu()">Anime</a>
+                <a href="#" onclick="showWatchlist(); closeMobileMenu()">Watchlist</a>
             </div>
             <div class="auth-section">
                 <div id="authButtons" class="auth-buttons">
@@ -217,7 +621,7 @@
                 
                 <!-- Search Bar -->
                 <div class="search-bar">
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search for movies, TV shows, anime...">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search for movies, TV shows, anime..." autocomplete="off">
                     <button class="search-btn" onclick="performSearch()">Search</button>
                 </div>
 
@@ -229,13 +633,6 @@
                     <button class="category-btn" onclick="showCategory('anime')">Anime</button>
                 </div>
             </section>
-
-            <!-- Recommended Ads Widget - Positioned between hero and content -->
-            <div class="ad-banner recommended">
-                <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script> 
-                <ins class="eas6a97888e20" data-zoneid="5665952"></ins> 
-                <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
-            </div>
 
             <!-- Content Grid -->
             <section id="contentSection">
@@ -270,7 +667,7 @@
 
     <!-- Video Player Modal -->
     <div id="videoPlayerModal" class="modal">
-        <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-content" style="max-width: 95vw;">
             <div class="modal-header">
                 <h2 id="playerTitle">Now Playing</h2>
                 <button class="close-btn" onclick="closeVideoPlayer()">&times;</button>
@@ -298,11 +695,11 @@
                 <form id="authForm">
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" required>
+                        <input type="email" id="email" required autocomplete="email">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" required>
+                        <input type="password" id="password" required autocomplete="current-password">
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">
                         <span id="authButtonText">Login</span>
@@ -349,8 +746,8 @@
         ">
             <div style="
                 text-align: center;
-                max-width: 500px;
-                padding: 40px;
+                max-width: 90%;
+                padding: 20px;
                 background: rgba(255,255,255,0.1);
                 border-radius: 20px;
                 backdrop-filter: blur(10px);
@@ -358,8 +755,8 @@
                 box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             ">
                 <div style="font-size: 60px; margin-bottom: 20px;">🚫</div>
-                <h2 style="margin: 0 0 20px 0; font-size: 28px; color: #f8fafc;">Ad Blocker Detected</h2>
-                <p style="margin: 0 0 25px 0; font-size: 16px; line-height: 1.6; color: #cbd5e1;">
+                <h2 style="margin: 0 0 20px 0; font-size: 24px; color: #f8fafc;">Ad Blocker Detected</h2>
+                <p style="margin: 0 0 25px 0; font-size: 14px; line-height: 1.6; color: #cbd5e1;">
                     We've detected that you're using an ad blocker. This site is supported by advertisements, 
                     which help us provide free content to all users.
                 </p>
@@ -367,38 +764,39 @@
                     background: rgba(239, 68, 68, 0.1);
                     border: 1px solid rgba(239, 68, 68, 0.3);
                     border-radius: 10px;
-                    padding: 20px;
+                    padding: 15px;
                     margin: 20px 0;
                 ">
-                    <p style="margin: 0; font-size: 14px; color: #fca5a5;">
+                    <p style="margin: 0; font-size: 12px; color: #fca5a5;">
                         <strong>Access Blocked:</strong> Please disable your ad blocker to continue using Streamlyst.
                     </p>
                 </div>
-                <div style="margin-top: 30px;">
-                    <h3 style="font-size: 18px; margin: 0 0 15px 0; color: #f1f5f9;">How to disable your ad blocker:</h3>
-                    <div style="text-align: left; font-size: 14px; line-height: 1.8; color: #e2e8f0;">
-                        <p style="margin: 10px 0;"><strong>• uBlock Origin:</strong> Click the shield icon → Click the power button</p>
-                        <p style="margin: 10px 0;"><strong>• Adblock Plus:</strong> Click the ABP icon → Toggle "Enabled on this site"</p>
-                        <p style="margin: 10px 0;"><strong>• AdGuard:</strong> Click the AdGuard icon → Toggle protection off</p>
-                        <p style="margin: 10px 0;"><strong>• Brave Browser:</strong> Click the Brave shield → Turn off "Block ads"</p>
+                <div style="margin-top: 25px;">
+                    <h3 style="font-size: 16px; margin: 0 0 15px 0; color: #f1f5f9;">How to disable your ad blocker:</h3>
+                    <div style="text-align: left; font-size: 12px; line-height: 1.6; color: #e2e8f0;">
+                        <p style="margin: 8px 0;"><strong>• uBlock Origin:</strong> Click the shield icon → Click the power button</p>
+                        <p style="margin: 8px 0;"><strong>• Adblock Plus:</strong> Click the ABP icon → Toggle "Enabled on this site"</p>
+                        <p style="margin: 8px 0;"><strong>• AdGuard:</strong> Click the AdGuard icon → Toggle protection off</p>
+                        <p style="margin: 8px 0;"><strong>• Brave Browser:</strong> Click the Brave shield → Turn off "Block ads"</p>
                     </div>
                 </div>
                 <button onclick="checkAdBlocker()" style="
                     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
                     color: white;
                     border: none;
-                    padding: 15px 30px;
+                    padding: 12px 25px;
                     border-radius: 25px;
-                    font-size: 16px;
+                    font-size: 14px;
                     font-weight: bold;
                     cursor: pointer;
-                    margin-top: 25px;
+                    margin-top: 20px;
                     box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
                     transition: transform 0.2s;
+                    min-height: 44px;
                 " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                     I've Disabled My Ad Blocker
                 </button>
-                <p style="margin: 20px 0 0 0; font-size: 12px; color: #94a3b8;">
+                <p style="margin: 15px 0 0 0; font-size: 10px; color: #94a3b8;">
                     After disabling, click the button above to continue
                 </p>
             </div>
@@ -406,6 +804,42 @@
     </div>
 
     <script>
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+        
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.remove('active');
+        }
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+        
+        // Prevent zoom on input focus for iOS
+        document.addEventListener('touchstart', function() {
+            if (window.innerWidth < 768) {
+                const viewport = document.querySelector('meta[name="viewport"]');
+                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
+            }
+        });
+        
+        // Handle orientation change
+        window.addEventListener('orientationchange', function() {
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+            }, 100);
+        });
+        
         // Aggressive ad block detection and blocking
         function detectAndBlockAdBlocker() {
             let adBlockerDetected = false;
