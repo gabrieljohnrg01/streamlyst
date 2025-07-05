@@ -1,13 +1,12 @@
 // Configuration
-// Configuration
 const CONFIG = {
-    TMDB_API_KEY: import.meta.env.VITE_TMDB_API_KEY,
-    TMDB_BASE_URL: import.meta.env.VITE_TMDB_BASE_URL,
-    TMDB_IMAGE_BASE_URL: import.meta.env.VITE_TMDB_IMAGE_BASE_URL,
-    ANILIST_API_URL: import.meta.env.VITE_ANILIST_API_URL,
-    SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-    SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
-    VIDSRC_BASE_URL: import.meta.env.VITE_VIDSRC_BASE_URL
+    TMDB_API_KEY: 'fc5229ddcee9e96a1be1b8f8535063a3',
+    TMDB_BASE_URL: 'https://api.themoviedb.org/3',
+    TMDB_IMAGE_BASE_URL: 'https://image.tmdb.org/t/p/w500',
+    ANILIST_API_URL: 'https://graphql.anilist.co',
+    SUPABASE_URL: 'https://mxqvyptzqueqltyqogyk.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14cXZ5cHR6cXVlcWx0eXFvZ3lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMDY1OTgsImV4cCI6MjA2NjY4MjU5OH0.96gJO6hi8Bmhn4ak2WYFX-elAJGkALfVfGGm_BGMUeI',
+    VIDSRC_BASE_URL: 'https://vidsrc.cc/v2/embed'
 };
 
 // Initialize Supabase
