@@ -605,13 +605,21 @@ async function toggleWatchlist(contentId, type) {
             showSuccessMessage('Added to watchlist');
         }
         
-        // Update button text
-        const button = event.target;
+        // Update button text - find the button that was clicked
         const isInWatchlist = watchlist.some(item => 
             item.content_id === contentId.toString() && item.content_type === type
         );
-        button.textContent = isInWatchlist ? '✓ In Watchlist' : '+ Add to Watchlist';
-        button.classList.toggle('added', isInWatchlist);
+        
+        // Update all watchlist buttons for this content
+        const buttons = document.querySelectorAll('.watchlist-btn');
+        buttons.forEach(button => {
+            // Check if this button is for the current content
+            const buttonOnClick = button.getAttribute('onclick');
+            if (buttonOnClick && buttonOnClick.includes(`'${contentId}'`) && buttonOnClick.includes(`'${type}'`)) {
+                button.textContent = isInWatchlist ? '✓ In Watchlist' : '+ Add to Watchlist';
+                button.classList.toggle('added', isInWatchlist);
+            }
+        });
     } catch (error) {
         console.error('Error updating watchlist:', error);
         showError('Failed to update watchlist');
