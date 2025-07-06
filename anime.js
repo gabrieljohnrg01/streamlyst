@@ -363,6 +363,49 @@ function playAnime(id, episode) {
     }
 }
 
+async function searchAnime(query) {
+    try {
+        const animeQuery = `
+            query ($search: String) {
+                Page(page: 1, perPage: 10) {
+                    media(search: $search, type: ANIME) {
+                        id
+                        title {
+                            romaji
+                            english
+                        }
+                        coverImage {
+                            large
+                        }
+                        description
+                        episodes
+                        status
+                        genres
+                        averageScore
+                    }
+                }
+            }
+        `;
+        
+        const response = await fetch(CONFIG.ANILIST_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: animeQuery,
+                variables: { search: query }
+            })
+        });
+        
+        const data = await response.json();
+        return data.data.Page.media.map(item => ({ ...item, source: 'anilist' }));
+    } catch (error) {
+        console.error('Error searching anime:', error);
+        return [];
+    }
+}
+
 async function fetchAnimeDetails(animeId) {
     try {
         const query = `
