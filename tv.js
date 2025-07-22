@@ -3,17 +3,7 @@ async function loadTVShows() {
     try {
         const response = await fetch(`${CONFIG.TMDB_BASE_URL}/tv/popular?api_key=${CONFIG.TMDB_API_KEY}`);
         const data = await response.json();
-        
-        // Filter out anime TV shows
-        const filteredTVShows = data.results.filter(tv => {
-            // Exclude Japanese animation shows
-            if (tv.original_language === 'ja' && tv.genre_ids?.includes(16)) {
-                return false;
-            }
-            return true;
-        });
-        
-        displayContent(filteredTVShows, 'tv');
+        displayContent(data.results, 'tv');
     } catch (error) {
         console.error('Error loading TV shows:', error);
         showError('Failed to load TV shows');

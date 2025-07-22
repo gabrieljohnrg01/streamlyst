@@ -3,17 +3,7 @@ async function loadMovies() {
     try {
         const response = await fetch(`${CONFIG.TMDB_BASE_URL}/movie/popular?api_key=${CONFIG.TMDB_API_KEY}`);
         const data = await response.json();
-        
-        // Filter out anime movies
-        const filteredMovies = data.results.filter(movie => {
-            // Exclude Japanese animation movies
-            if (movie.original_language === 'ja' && movie.genre_ids?.includes(16)) {
-                return false;
-            }
-            return true;
-        });
-        
-        displayContent(filteredMovies, 'movie');
+        displayContent(data.results, 'movie');
     } catch (error) {
         console.error('Error loading movies:', error);
         showError('Failed to load movies');

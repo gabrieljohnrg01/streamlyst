@@ -275,17 +275,7 @@ async function loadTrendingContent() {
     try {
         const response = await fetch(`${CONFIG.TMDB_BASE_URL}/trending/all/week?api_key=${CONFIG.TMDB_API_KEY}`);
         const data = await response.json();
-        
-        // Filter out any potential anime content
-        const filteredResults = data.results.filter(item => {
-            // Exclude items with Japanese language and animation genre
-            if (item.original_language === 'ja' && item.genre_ids?.includes(16)) {
-                return false;
-            }
-            return true;
-        });
-        
-        displayContent(filteredResults);
+        displayContent(data.results);
     } catch (error) {
         console.error('Error loading trending content:', error);
         showError('Failed to load trending content');
@@ -417,12 +407,16 @@ function playContent(id, type, season = 1, episode = 1) {
         playerTitle.textContent = `${currentContent.name} - S${season}E${episode}`;
         prevBtn.style.display = 'block';
         nextBtn.style.display = 'block';
+    } else if (type === 'anime') {
+        embedUrl = `${CONFIG.VIDSRC_BASE_URL}/anime/tmdb${id}/${episode}/sub`;
+        playerTitle.textContent = `${currentContent.name} - Episode ${episode}`;
+        prevBtn.style.display = 'block';
+        nextBtn.style.display = 'block';
     }
     
     videoPlayer.src = embedUrl;
     document.getElementById('videoPlayerModal').classList.add('active');
     
-    // Track progress
     if (currentUser) {
         trackProgress(id, type, season, episode);
     }
@@ -434,36 +428,35 @@ function closeVideoPlayer() {
 }
 
 function nextEpisode() {
-    if (currentVideoInfo.type === 'tv' || currentVideoInfo.type === 'anime') {
+    if (currentVideoInfo.type === 'tv') {
         const nextEpisode = currentVideoInfo.episode + 1;
-        
-        // For TV shows, we might need to check if there's a next episode
-        if (currentVideoInfo.type === 'anime' && currentVideoInfo.totalEpisodes && nextEpisode > currentVideoInfo.totalEpisodes) {
+        playContent(currentVideoInfo.id, 'tv', currentVideoInfo.season, nextEpisode);
+    } else if (currentVideoInfo.type === 'anime') {
+        const nextEpisode = currentVideoInfo.episode + 1;
+        if (currentVideoInfo.totalEpisodes && nextEpisode > currentVideoInfo.totalEpisodes) {
             showSuccessMessage('No more episodes available');
             return;
         }
-        
-        if (currentVideoInfo.type === 'tv') {
-            playContent(currentVideoInfo.id, 'tv', currentVideoInfo.season, nextEpisode);
-        } else {
-            playAnime(currentVideoInfo.id, nextEpisode);
-        }
+        playAnime(currentVideoInfo.id, nextEpisode);
     }
 }
 
+
 function prevEpisode() {
-    if (currentVideoInfo.type === 'tv' || currentVideoInfo.type === 'anime') {
+    if (currentVideoInfo.type === 'tv') {
         const prevEpisode = currentVideoInfo.episode - 1;
         if (prevEpisode < 1) {
             showSuccessMessage('This is the first episode');
             return;
         }
-        
-        if (currentVideoInfo.type === 'tv') {
-            playContent(currentVideoInfo.id, 'tv', currentVideoInfo.season, prevEpisode);
-        } else {
-            playAnime(currentVideoInfo.id, prevEpisode);
+        playContent(currentVideoInfo.id, 'tv', currentVideoInfo.season, prevEpisode);
+    } else if (currentVideoInfo.type === 'anime') {
+        const prevEpisode = currentVideoInfo.episode - 1;
+        if (prevEpisode < 1) {
+            showSuccessMessage('This is the first episode');
+            return;
         }
+        playAnime(currentVideoInfo.id, prevEpisode);
     }
 }
 
@@ -475,24 +468,15 @@ async function performSearch() {
     showLoading();
     
     try {
-        // Search movies and TV shows from TMDB (filter out anime)
+        // Search movies and TV shows from TMDB
         const tmdbResponse = await fetch(`${CONFIG.TMDB_BASE_URL}/search/multi?api_key=${CONFIG.TMDB_API_KEY}&query=${encodeURIComponent(query)}`);
         const tmdbData = await tmdbResponse.json();
         
-        // Filter out any anime content from TMDB results
-        const filteredTmdbResults = tmdbData.results.filter(item => {
-            // Exclude items with Japanese language and animation genre
-            if (item.original_language === 'ja' && item.genre_ids?.includes(16)) {
-                return false;
-            }
-            return true;
-        }).map(item => ({ ...item, source: 'tmdb' }));
-        
-        // Search anime only from AniList
+        // Search anime separately
         const animeResults = await searchAnime(query);
         
         // Combine and display results
-        const combinedResults = [...filteredTmdbResults, ...animeResults];
+        const combinedResults = [...tmdbData.results, ...animeResults];
         
         displaySearchResults(combinedResults);
     } catch (error) {
